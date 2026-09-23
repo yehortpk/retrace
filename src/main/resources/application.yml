@@ -5,9 +5,9 @@ spring:
     compose:
       enabled: true
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/projectmemory}
-    username: ${DB_USER:projectmemory}
-    password: ${DB_PASSWORD:projectmemory}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/retrace}
+    username: ${DB_USER:retrace}
+    password: ${DB_PASSWORD:retrace}
   jpa:
     hibernate:
       ddl-auto: validate
