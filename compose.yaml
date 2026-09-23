@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-projectmemory}
+      POSTGRES_USER: ${POSTGRES_USER:-projectmemory}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-projectmemory}
+    ports: ["5432:5432"]
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-projectmemory}"]
+      interval: 5s
+      retries: 10
+volumes:
+  pgdata:

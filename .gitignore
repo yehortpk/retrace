@@ -1,0 +1,12 @@
+PLAN.md
+build/
+.gradle/
+node_modules/
+storage/
+.env
+*.log
+.idea/
+*.iml
+out/
+dist/
+frontend/dist/
