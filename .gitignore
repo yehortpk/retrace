@@ -10,3 +10,4 @@ storage/
 out/
 dist/
 frontend/dist/
+.claude/
