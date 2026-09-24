@@ -28,6 +28,8 @@ management:
 retrace:
   storage:
     root: ${STORAGE_ROOT:./storage}
+  artifacts:
+    project-storage-limit: 500MB # cumulative size of all artifact versions per project
 
 server:
   port: 8080

@@ -26,7 +26,4 @@ public interface ArtifactVersionRepository extends JpaRepository<ArtifactVersion
 
     @Query("select v from ArtifactVersion v where v.entry.id = :entryId")
     List<ArtifactVersion> byEntry(@Param("entryId") UUID entryId);
-
-    @Query("select coalesce(sum(v.sizeBytes), 0) from ArtifactVersion v where v.artifact.project.id = :projectId")
-    long totalSizeByProject(@Param("projectId") UUID projectId);
 }
