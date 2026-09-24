@@ -3,7 +3,6 @@ package dev.yetpk.retrace.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import dev.yetpk.retrace.config.StorageProperties;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,7 +26,7 @@ class LocalFileStoreTest {
 
     @BeforeEach
     void setUp() {
-        fileStore = new LocalFileStore(new StorageProperties(storageRoot.toString()));
+        fileStore = new LocalFileStore(storageRoot.toString());
         projectId = UUID.randomUUID();
     }
 

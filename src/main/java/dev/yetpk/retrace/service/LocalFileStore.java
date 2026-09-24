@@ -1,6 +1,5 @@
 package dev.yetpk.retrace.service;
 
-import dev.yetpk.retrace.config.StorageProperties;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
@@ -8,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,8 +15,8 @@ public class LocalFileStore implements FileStore {
 
     private final Path root;
 
-    public LocalFileStore(StorageProperties properties) {
-        this.root = Path.of(properties.root()).toAbsolutePath().normalize();
+    public LocalFileStore(@Value("${retrace.storage.root}") String storageRoot) {
+        this.root = Path.of(storageRoot).toAbsolutePath().normalize();
         try {
             Files.createDirectories(root);
         } catch (IOException e) {
