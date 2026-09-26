@@ -34,9 +34,9 @@ class LocalFileStoreTest {
     void byteRoundTrip() throws IOException {
         byte[] content = "hello, retrace".getBytes(StandardCharsets.UTF_8);
 
-        UUID key = fileStore.store(projectId, new ByteArrayInputStream(content));
+        UUID key = fileStore.storeContent(projectId, new ByteArrayInputStream(content));
 
-        try (InputStream readBack = fileStore.retrieve(projectId, key)) {
+        try (InputStream readBack = fileStore.retrieveContent(projectId, key)) {
             assertThat(readBack.readAllBytes()).isEqualTo(content);
         }
     }
@@ -45,7 +45,7 @@ class LocalFileStoreTest {
     void generatesAUniqueKeyPerCall() {
         Set<UUID> keys = new HashSet<>();
         for (int i = 0; i < 20; i++) {
-            keys.add(fileStore.store(projectId, new ByteArrayInputStream(("content " + i).getBytes(StandardCharsets.UTF_8))));
+            keys.add(fileStore.storeContent(projectId, new ByteArrayInputStream(("content " + i).getBytes(StandardCharsets.UTF_8))));
         }
 
         assertThat(keys).hasSize(20);
@@ -53,7 +53,7 @@ class LocalFileStoreTest {
 
     @Test
     void storesUnderProjectIdAndArtifactsSubdirectory() {
-        UUID key = fileStore.store(projectId, new ByteArrayInputStream("x".getBytes(StandardCharsets.UTF_8)));
+        UUID key = fileStore.storeContent(projectId, new ByteArrayInputStream("x".getBytes(StandardCharsets.UTF_8)));
 
         Path expected = storageRoot.toAbsolutePath().normalize()
                 .resolve(projectId.toString())
@@ -64,7 +64,7 @@ class LocalFileStoreTest {
 
     @Test
     void leavesNoTempFilesBehindAfterASuccessfulStore() throws IOException {
-        fileStore.store(projectId, new ByteArrayInputStream("x".getBytes(StandardCharsets.UTF_8)));
+        fileStore.storeContent(projectId, new ByteArrayInputStream("x".getBytes(StandardCharsets.UTF_8)));
 
         try (var files = Files.list(storageRoot)) {
             boolean anyTempFile = files.anyMatch(p -> p.getFileName().toString().startsWith("upload-"));
@@ -74,7 +74,7 @@ class LocalFileStoreTest {
 
     @Test
     void rejectsEmptyContent() {
-        assertThatThrownBy(() -> fileStore.store(projectId, new ByteArrayInputStream(new byte[0])))
+        assertThatThrownBy(() -> fileStore.storeContent(projectId, new ByteArrayInputStream(new byte[0])))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

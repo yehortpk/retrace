@@ -9,7 +9,7 @@ import java.util.UUID;
  */
 public interface FileStore {
 
-    UUID store(UUID projectId, InputStream content);
+    UUID storeContent(UUID projectId, InputStream content);
 
-    InputStream retrieve(UUID projectId, UUID storageKey);
+    InputStream retrieveContent(UUID projectId, UUID storageKey);
 }
