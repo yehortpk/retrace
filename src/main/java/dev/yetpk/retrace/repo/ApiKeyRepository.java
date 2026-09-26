@@ -10,5 +10,5 @@ import org.springframework.data.repository.query.Param;
 public interface ApiKeyRepository extends JpaRepository<ApiKey, String> {
 
     @Query("select k from ApiKey k where k.owner.id = :ownerId and k.revokedAt is null")
-    List<ApiKey> activeByOwner(@Param("ownerId") UUID ownerId);
+    List<ApiKey> findActiveByOwnerId(@Param("ownerId") UUID ownerId);
 }

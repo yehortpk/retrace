@@ -19,12 +19,12 @@ public class ArtifactStorageQuota {
         this.limitBytes = limit.toBytes();
     }
 
-    public long limitBytes() {
+    public long getLimitBytes() {
         return limitBytes;
     }
 
     /** Whether storing {@code additionalBytes} more in the project stays within its remaining quota. */
-    public boolean fits(Project project, long additionalBytes) {
+    public boolean isWithinLimit(Project project, long additionalBytes) {
         return project.fitsArtifactStorage(additionalBytes);
     }
 }

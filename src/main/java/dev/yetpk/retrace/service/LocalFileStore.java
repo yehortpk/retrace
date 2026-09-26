@@ -30,9 +30,9 @@ public class LocalFileStore implements FileStore {
      * is atomic on a single filesystem.
      */
     @Override
-    public UUID store(UUID projectId, InputStream content) {
+    public UUID storeContent(UUID projectId, InputStream content) {
         UUID key = UUID.randomUUID();
-        Path target = pathFor(projectId, key);
+        Path target = resolvePath(projectId, key);
         Path tempFile;
         try {
             Files.createDirectories(target.getParent());
@@ -57,15 +57,15 @@ public class LocalFileStore implements FileStore {
     }
 
     @Override
-    public InputStream retrieve(UUID projectId, UUID storageKey) {
+    public InputStream retrieveContent(UUID projectId, UUID storageKey) {
         try {
-            return Files.newInputStream(pathFor(projectId, storageKey));
+            return Files.newInputStream(resolvePath(projectId, storageKey));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }
 
-    private Path pathFor(UUID projectId, UUID storageKey) {
+    private Path resolvePath(UUID projectId, UUID storageKey) {
         return root.resolve(projectId.toString()).resolve("artifacts").resolve(storageKey.toString());
     }
 
