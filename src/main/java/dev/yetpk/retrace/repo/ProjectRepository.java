@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface ProjectRepository extends JpaRepository<Project, UUID> {
 
-    @Query("select p from Project p where p.owner.id = :ownerId")
+    @Query("select p from Project p where p.owner.id = :ownerId order by p.name asc")
     List<Project> findByOwnerId(@Param("ownerId") UUID ownerId);
 
     @Query("select p from Project p where p.id = :id and p.owner.id = :ownerId")
