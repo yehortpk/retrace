@@ -31,7 +31,7 @@ class LocalFileStoreTest {
     }
 
     @Test
-    void byteRoundTrip() throws IOException {
+    void StoreContent_ContentThenRetrieve_ShouldReturnTheSameBytes() throws IOException {
         byte[] content = "hello, retrace".getBytes(StandardCharsets.UTF_8);
 
         UUID key = fileStore.storeContent(projectId, new ByteArrayInputStream(content));
@@ -42,7 +42,7 @@ class LocalFileStoreTest {
     }
 
     @Test
-    void generatesAUniqueKeyPerCall() {
+    void StoreContent_CalledRepeatedly_ShouldGenerateAUniqueKeyEachTime() {
         Set<UUID> keys = new HashSet<>();
         for (int i = 0; i < 20; i++) {
             keys.add(fileStore.storeContent(projectId, new ByteArrayInputStream(("content " + i).getBytes(StandardCharsets.UTF_8))));
@@ -52,7 +52,7 @@ class LocalFileStoreTest {
     }
 
     @Test
-    void storesUnderProjectIdAndArtifactsSubdirectory() {
+    void StoreContent_AnyContent_ShouldWriteUnderProjectIdArtifactsDirectory() {
         UUID key = fileStore.storeContent(projectId, new ByteArrayInputStream("x".getBytes(StandardCharsets.UTF_8)));
 
         Path expected = storageRoot.toAbsolutePath().normalize()
@@ -63,7 +63,7 @@ class LocalFileStoreTest {
     }
 
     @Test
-    void leavesNoTempFilesBehindAfterASuccessfulStore() throws IOException {
+    void StoreContent_SuccessfulStore_ShouldLeaveNoTempFilesBehind() throws IOException {
         fileStore.storeContent(projectId, new ByteArrayInputStream("x".getBytes(StandardCharsets.UTF_8)));
 
         try (var files = Files.list(storageRoot)) {
@@ -73,7 +73,7 @@ class LocalFileStoreTest {
     }
 
     @Test
-    void rejectsEmptyContent() {
+    void StoreContent_EmptyContent_ShouldThrowIllegalArgument() {
         assertThatThrownBy(() -> fileStore.storeContent(projectId, new ByteArrayInputStream(new byte[0])))
                 .isInstanceOf(IllegalArgumentException.class);
     }
