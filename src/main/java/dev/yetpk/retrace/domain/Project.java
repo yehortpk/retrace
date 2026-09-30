@@ -28,9 +28,6 @@ public class Project {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private String slug;
-
     private String description;
 
     /**
@@ -50,10 +47,9 @@ public class Project {
     protected Project() {
     }
 
-    public Project(AppUser owner, String name, String slug, String description, long artifactStorageLimitBytes) {
+    public Project(AppUser owner, String name, String description, long artifactStorageLimitBytes) {
         this.owner = owner;
         this.name = name;
-        this.slug = slug;
         this.description = description;
         this.artifactStorageRemainingBytes = artifactStorageLimitBytes;
     }
@@ -72,10 +68,6 @@ public class Project {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getSlug() {
-        return slug;
     }
 
     public String getDescription() {
