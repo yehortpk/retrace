@@ -1,0 +1,26 @@
+spring:
+  docker:
+    compose:
+      enabled: false
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/retrace}
+    username: ${DB_USER:retrace}
+    password: ${DB_PASSWORD:retrace}
+  jpa:
+    properties:
+      hibernate:
+        default_schema: retrace_test
+        # Lets a test count the statements a timeline page actually issues.
+        generate_statistics: true
+  flyway:
+    schemas: retrace_test
+    default-schema: retrace_test
+    create-schemas: true
+    clean-disabled: false
+
+retrace:
+  storage:
+    root: ${java.io.tmpdir}/retrace-test-storage
+  artifacts:
+    # Small enough that a test can exhaust it with a handful of bytes.
+    project-storage-limit: 1KB
