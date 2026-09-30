@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
@@ -39,6 +40,15 @@ public class Project {
      */
     @Column(name = "artifact_storage_remaining_bytes")
     private Long artifactStorageRemainingBytes;
+
+    /**
+     * Optimistic lock guard. Two sessions recording into one project both read
+     * {@code artifactStorageRemainingBytes}; without this, the second commit would overwrite the
+     * first one's decrement and the project would quietly overspend its quota. The loser of the race
+     * fails with an optimistic lock exception instead.
+     */
+    @Version
+    private long version;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -107,6 +117,10 @@ public class Project {
         if (artifactStorageRemainingBytes == null) {
             throw new IllegalStateException("artifactStorageRemainingBytes has not been initialized for this project");
         }
+    }
+
+    public long getVersion() {
+        return version;
     }
 
     public OffsetDateTime getCreatedAt() {
