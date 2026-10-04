@@ -18,6 +18,11 @@ spring:
           time_zone: UTC
   flyway:
     enabled: true
+  servlet:
+    multipart:
+      # The default 1MB would refuse the artifact uploads this API exists to accept.
+      max-file-size: 100MB
+      max-request-size: 120MB
 
 management:
   endpoints:
