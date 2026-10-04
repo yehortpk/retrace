@@ -115,6 +115,20 @@ public class TimelineService {
         return page.map(entry -> toView(entry, versionsByEntryId));
     }
 
+    /**
+     * One entry of {@code project}, with the artifact versions it produced.
+     *
+     * <p>This exists so a write can answer with what it did: {@link #recordEntry} assigns ordinals,
+     * and a caller adding a version to an artifact needs to be told whether it became v2 or v7.
+     */
+    @Transactional(readOnly = true)
+    public TimelineEntryView findEntry(Project project, UUID entryId) {
+        Entry entry = entryRepository.findByIdAndProjectId(entryId, project.getId())
+                .orElseThrow(() -> new NotFoundException(
+                        "No entry with id '%s' in this project".formatted(entryId)));
+        return toView(entry, findVersionsByEntryId(List.of(entry)));
+    }
+
     /** Entries recorded after {@code since}, newest first — what a starting session reads to catch up. */
     @Transactional(readOnly = true)
     public List<TimelineEntryView> findTimelineSince(Project project, OffsetDateTime since) {
