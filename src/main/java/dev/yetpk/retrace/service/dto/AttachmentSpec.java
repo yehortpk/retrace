@@ -6,7 +6,8 @@ import org.springframework.core.io.InputStreamSource;
 /**
  * One file to attach to an entry being recorded. The artifact it belongs to is named either by
  * {@code artifactId} (an existing artifact, which must live in the same project) or by
- * {@code artifactName} (reused if the project already has that name, created otherwise).
+ * {@code artifactName}, which always creates a new artifact — a name is a current label, not an
+ * identity to look an artifact up by.
  *
  * <p>Content is passed as an {@link InputStreamSource} rather than bytes so nothing buffers the
  * whole upload: a {@code MultipartFile} satisfies it as is, and the service opens and closes the
