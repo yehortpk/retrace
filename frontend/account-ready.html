@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Account ready · Retrace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/controls.css">
+<link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+<main class="auth-page">
+  <div class="auth-brand">
+    <span class="brand-mark brand-mark--large"><svg class="icon" width="20" height="20" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8a4.5 4.5 0 1 0 1.3-3.2"/><path d="M4.5 2.5v2.5H7"/></svg></span>
+    <span>Retrace</span>
+  </div>
+
+  <section class="auth-card auth-card--wide" aria-labelledby="ready-title">
+    <div class="auth-card__header">
+      <h1 class="auth-card__title" id="ready-title">
+        <svg class="icon" width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8.5l3 3 7-7"/></svg>
+        Your account is ready
+      </h1>
+      <p class="auth-card__lede">This is your API key. Claude Code sends it with every entry it records. <strong>It’s shown only now</strong> — copy it before you leave this page.</p>
+    </div>
+
+    <div class="secret secret--muted">
+      <code class="secret__value">export PROJECT_MEMORY_API_KEY=pm_8w2dq0r5ntc1.Hq7Tn2LxV9cR4mYb0pZsW6eJk1UfD3aG8iNo5tQvKyE</code>
+      <button class="button button--outline button--small" type="button">
+        <svg class="icon" width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M10.5 5.5V4a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 4v5A1.5 1.5 0 0 0 4 10.5h1.5"/></svg>
+        Copy
+      </button>
+    </div>
+
+    <ol class="setup-steps">
+      <li>Add that line to your shell profile, e.g. <code>~/.zshrc</code></li>
+      <li>Create your first project</li>
+      <li>Bind a repository to it and install the Claude Code plugin</li>
+    </ol>
+
+    <a class="button button--primary button--large auth-card__continue" href="index.html">I’ve saved it — continue</a>
+  </section>
+</main>
+</body>
+</html>

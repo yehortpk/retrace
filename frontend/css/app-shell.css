@@ -1,0 +1,201 @@
+/*
+ * Sidebar + main column. The two wrap rather than switch at a breakpoint: once the main
+ * column can no longer keep 560px beside a 232px sidebar, the sidebar moves above it.
+ */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Sidebar */
+
+.sidebar {
+  flex: 1 1 232px;
+  display: flex;
+  flex-direction: column;
+  padding: 14px 10px;
+  background: var(--color-surface-sunken);
+  border-right: 1px solid var(--color-border);
+}
+
+.sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding: 4px 8px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.sidebar__all-projects {
+  margin-bottom: 16px;
+}
+
+.sidebar__section {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+}
+
+.sidebar__section-title {
+  padding: 0 8px 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-subtle);
+}
+
+.sidebar__list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sidebar__list .sidebar__list {
+  margin-top: 2px;
+}
+
+.sidebar__footer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-border);
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 32px;
+  padding: 0 8px;
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+}
+
+.nav-link:hover {
+  background: var(--color-nav-hover);
+}
+
+.nav-link[aria-current="page"] {
+  background: var(--color-nav-current);
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.nav-link--project {
+  color: var(--color-text);
+}
+
+.nav-link--expanded {
+  font-weight: 500;
+}
+
+.nav-link--nested {
+  padding-left: 26px;
+}
+
+.nav-link__label {
+  flex-grow: 1;
+}
+
+.nav-link__count {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--color-text-subtle);
+}
+
+/* Main column */
+
+.main {
+  flex: 999 1 560px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  min-height: 52px;
+  padding: 8px 24px;
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.topbar__title {
+  display: flex;
+  flex-grow: 1;
+  align-items: center;
+  gap: 8px;
+}
+
+.topbar__parent {
+  color: var(--color-text-muted);
+}
+
+.topbar__separator {
+  color: var(--color-icon-faint);
+}
+
+.topbar__title .count-pill {
+  margin-left: 4px;
+}
+
+.page-title {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.content {
+  width: 100%;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 24px 32px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.content--narrow {
+  max-width: 760px;
+  padding-top: 28px;
+  gap: 24px;
+}
+
+/* A bordered box of rows split by hairlines. */
+.row-box {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.row-box__header {
+  height: 34px;
+  padding: 0 14px;
+  background: var(--color-surface-muted);
+  border-bottom: 1px solid var(--color-divider);
+  font-size: 12px;
+  color: var(--color-text-subtle);
+}
+
+.row-box__rows > * + * {
+  border-top: 1px solid var(--color-divider);
+}
+
+@media (max-width: 600px) {
+  .topbar {
+    padding: 8px 16px;
+  }
+
+  .content {
+    padding: 20px 16px 48px;
+  }
+}

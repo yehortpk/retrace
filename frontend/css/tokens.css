@@ -1,0 +1,53 @@
+/*
+ * Design tokens. Light mode only for now: dark mode becomes a second set of these values
+ * once they settle, not a change to any component.
+ */
+:root {
+  color-scheme: light;
+
+  --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, monospace;
+
+  --color-surface: #FFFFFF;
+  --color-surface-sunken: #F7F7F8;
+  --color-surface-muted: #FAFAFB;
+  --color-surface-hover: #F2F2F5;
+  --color-nav-hover: #EEEEF1;
+  --color-nav-current: #EAEAEE;
+
+  --color-border: #E8E8EC;
+  --color-divider: #EDEDF0;
+  --color-border-input: #DCDCE2;
+  --color-border-strong: #D4D4DA;
+  --color-border-code: #E3E3E8;
+
+  --color-text: #1B1C1F;
+  --color-text-secondary: #45474E;
+  --color-text-muted: #5F6168;
+  --color-text-subtle: #6E7079;
+  --color-icon-faint: #9A9CA5;
+
+  --color-accent: #5B5BD6;
+  --color-accent-hover: #4F4FC4;
+  --color-accent-text: #4A49B8;
+  --color-accent-text-hover: #3B3A99;
+  --color-accent-surface: #F7F7FD;
+  --color-accent-border: #DCDCF3;
+  --color-accent-badge: #EEEEFB;
+  --color-accent-selected: #F3F3FA;
+  --color-on-accent: #FFFFFF;
+
+  --color-danger: #C42B30;
+  --color-danger-hover: #FCEEEE;
+
+  --color-backdrop: rgb(24 24 34 / 0.32);
+
+  --shadow-card: 0 1px 2px rgb(20 20 40 / 0.04);
+  --shadow-dialog: 0 0 0 1px rgb(20 20 40 / 0.06), 0 16px 48px rgb(20 20 40 / 0.2);
+
+  --radius-xs: 4px;
+  --radius-sm: 5px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+}

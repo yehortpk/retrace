@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projects · Retrace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/controls.css">
+<link rel="stylesheet" href="css/app-shell.css">
+<link rel="stylesheet" href="css/projects.css">
+</head>
+<body>
+<div class="app">
+
+  <nav class="sidebar" aria-label="Main">
+    <a class="sidebar__brand" href="index.html">
+      <span class="brand-mark"><svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8a4.5 4.5 0 1 0 1.3-3.2"/><path d="M4.5 2.5v2.5H7"/></svg></span>
+      <span>Retrace</span>
+    </a>
+    <a class="nav-link sidebar__all-projects" href="index.html" aria-current="page">
+      <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="4.5" height="4.5" rx="1"/><rect x="9" y="2.5" width="4.5" height="4.5" rx="1"/><rect x="2.5" y="9" width="4.5" height="4.5" rx="1"/><rect x="9" y="9" width="4.5" height="4.5" rx="1"/></svg>
+      <span>All projects</span>
+    </a>
+    <div class="sidebar__section">
+      <div class="sidebar__section-title" id="sidebar-projects">Projects</div>
+      <ul class="sidebar__list" aria-labelledby="sidebar-projects">
+        <li>
+          <a class="nav-link nav-link--project" href="timeline.html">
+            <span class="swatch"></span>
+            <span class="nav-link__label">Retrace</span>
+            <span class="nav-link__count">42<span class="visually-hidden"> entries</span></span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-link nav-link--project" href="timeline.html">
+            <span class="swatch" style="--swatch: #0B7A70"></span>
+            <span class="nav-link__label">Pricing site</span>
+            <span class="nav-link__count">7<span class="visually-hidden"> entries</span></span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-link nav-link--project" href="timeline.html">
+            <span class="swatch" style="--swatch: #C2410C"></span>
+            <span class="nav-link__label">Home lab</span>
+            <span class="nav-link__count">15<span class="visually-hidden"> entries</span></span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-link" href="index.html#project-name">
+            <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg>
+            <span>New project</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="sidebar__footer">
+      <a class="nav-link" href="keys.html">
+        <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="10.5" r="3"/><path d="M7.6 8.4L13 3M11 5l1.5 1.5M9.5 6.5L11 8"/></svg>
+        <span>API keys</span>
+      </a>
+      <a class="nav-link" href="login.html">
+        <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 13H3.5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1H6"/><path d="M10 11l3-3-3-3M13 8H6"/></svg>
+        <span>Sign out</span>
+      </a>
+    </div>
+  </nav>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar__title">
+        <h1 class="page-title">Projects</h1>
+      </div>
+      <a class="button button--primary" href="#project-name">
+        <svg class="icon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg>
+        New project
+      </a>
+    </header>
+
+    <div class="content">
+      <form class="project-form" method="post" aria-label="New project">
+        <div class="field">
+          <label class="field__label" for="project-name">Name</label>
+          <input class="input" id="project-name" name="name" type="text" required>
+        </div>
+        <div class="field">
+          <label class="field__label" for="project-description">Description <span class="field__optional">— optional</span></label>
+          <textarea class="input" id="project-description" name="description" rows="2" placeholder="What is this project about?"></textarea>
+        </div>
+        <div class="form-actions">
+          <button class="button button--ghost" type="reset">Cancel</button>
+          <button class="button button--primary" type="submit">Create project</button>
+        </div>
+      </form>
+
+      <ul class="row-box row-box__rows plain-list" aria-label="Your projects">
+        <li>
+          <a class="project-row" href="timeline.html">
+            <span class="swatch"></span>
+            <span class="project-row__text">
+              <span class="project-row__name">Retrace</span>
+              <span class="project-row__description">A chronological history layer for solo projects</span>
+            </span>
+            <span class="project-row__count">42 entries</span>
+            <svg class="icon project-row__chevron" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4l4 4-4 4"/></svg>
+          </a>
+        </li>
+        <li>
+          <a class="project-row" href="timeline.html">
+            <span class="swatch" style="--swatch: #0B7A70"></span>
+            <span class="project-row__text">
+              <span class="project-row__name">Pricing site</span>
+              <span class="project-row__description">Annual plans and the new checkout flow</span>
+            </span>
+            <span class="project-row__count">7 entries</span>
+            <svg class="icon project-row__chevron" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4l4 4-4 4"/></svg>
+          </a>
+        </li>
+        <li>
+          <a class="project-row" href="timeline.html">
+            <span class="swatch" style="--swatch: #C2410C"></span>
+            <span class="project-row__text">
+              <span class="project-row__name">Home lab</span>
+              <span class="project-row__description">Cluster, backups and network notes</span>
+            </span>
+            <span class="project-row__count">15 entries</span>
+            <svg class="icon project-row__chevron" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4l4 4-4 4"/></svg>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </main>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,117 @@
+.keys-intro {
+  color: var(--color-text-muted);
+}
+
+.key-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.key-form .field {
+  flex: 1 1 260px;
+}
+
+.key-issued {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--color-accent-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-accent-surface);
+}
+
+.key-issued__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.key-issued__title .icon {
+  color: var(--color-accent);
+}
+
+.key-issued__warning {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.key-issued__dismiss {
+  align-self: flex-start;
+}
+
+/* Scrolls sideways inside its border at phone width rather than squeezing the columns. */
+.keys-table-scroller {
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.keys-table {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.keys-table__created {
+  width: 96px;
+}
+
+.keys-table__last-used {
+  width: 116px;
+}
+
+.keys-table__actions {
+  width: 90px;
+}
+
+.keys-table th,
+.keys-table td {
+  padding: 0 6px;
+  text-align: left;
+}
+
+.keys-table th:first-child,
+.keys-table td:first-child {
+  padding-left: 14px;
+}
+
+.keys-table th:last-child,
+.keys-table td:last-child {
+  padding-right: 14px;
+  text-align: right;
+}
+
+.keys-table th {
+  height: 34px;
+  background: var(--color-surface-muted);
+  border-bottom: 1px solid var(--color-divider);
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--color-text-subtle);
+}
+
+.keys-table td {
+  height: 46px;
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+}
+
+.keys-table tbody tr + tr td {
+  border-top: 1px solid var(--color-divider);
+}
+
+.keys-table__name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.keys-table__id {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}

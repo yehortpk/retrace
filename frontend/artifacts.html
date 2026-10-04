@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Artifacts · Retrace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/controls.css">
+<link rel="stylesheet" href="css/app-shell.css">
+<link rel="stylesheet" href="css/artifacts.css">
+</head>
+<body>
+<div class="app">
+
+  <nav class="sidebar" aria-label="Main">
+    <a class="sidebar__brand" href="index.html">
+      <span class="brand-mark"><svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8a4.5 4.5 0 1 0 1.3-3.2"/><path d="M4.5 2.5v2.5H7"/></svg></span>
+      <span>Retrace</span>
+    </a>
+    <a class="nav-link sidebar__all-projects" href="index.html">
+      <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="4.5" height="4.5" rx="1"/><rect x="9" y="2.5" width="4.5" height="4.5" rx="1"/><rect x="2.5" y="9" width="4.5" height="4.5" rx="1"/><rect x="9" y="9" width="4.5" height="4.5" rx="1"/></svg>
+      <span>All projects</span>
+    </a>
+    <div class="sidebar__section">
+      <div class="sidebar__section-title" id="sidebar-projects">Projects</div>
+      <ul class="sidebar__list" aria-labelledby="sidebar-projects">
+        <li>
+          <a class="nav-link nav-link--project nav-link--expanded" href="timeline.html">
+            <span class="swatch"></span>
+            <span class="nav-link__label">Retrace</span>
+            <span class="nav-link__count">42<span class="visually-hidden"> entries</span></span>
+          </a>
+          <ul class="sidebar__list">
+            <li>
+              <a class="nav-link nav-link--nested" href="timeline.html">
+                <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="3.5" cy="4" r="1"/><circle cx="3.5" cy="8" r="1"/><circle cx="3.5" cy="12" r="1"/><path d="M7 4h6M7 8h6M7 12h6"/></svg>
+                <span class="nav-link__label">Timeline</span>
+              </a>
+            </li>
+            <li>
+              <a class="nav-link nav-link--nested" href="artifacts.html" aria-current="page">
+                <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 5.5L8 2.5l5.5 3L8 8.5z"/><path d="M2.5 8.5L8 11.5l5.5-3"/><path d="M2.5 11L8 14l5.5-3"/></svg>
+                <span class="nav-link__label">Artifacts</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a class="nav-link nav-link--project" href="timeline.html">
+            <span class="swatch" style="--swatch: #0B7A70"></span>
+            <span class="nav-link__label">Pricing site</span>
+            <span class="nav-link__count">7<span class="visually-hidden"> entries</span></span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-link nav-link--project" href="timeline.html">
+            <span class="swatch" style="--swatch: #C2410C"></span>
+            <span class="nav-link__label">Home lab</span>
+            <span class="nav-link__count">15<span class="visually-hidden"> entries</span></span>
+          </a>
+        </li>
+        <li>
+          <a class="nav-link" href="index.html#project-name">
+            <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg>
+            <span>New project</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="sidebar__footer">
+      <a class="nav-link" href="keys.html">
+        <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="10.5" r="3"/><path d="M7.6 8.4L13 3M11 5l1.5 1.5M9.5 6.5L11 8"/></svg>
+        <span>API keys</span>
+      </a>
+      <a class="nav-link" href="login.html">
+        <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 13H3.5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1H6"/><path d="M10 11l3-3-3-3M13 8H6"/></svg>
+        <span>Sign out</span>
+      </a>
+    </div>
+  </nav>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="topbar__title">
+        <span class="topbar__parent">Retrace</span>
+        <svg class="icon topbar__separator" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4l4 4-4 4"/></svg>
+        <h1 class="page-title">Artifacts</h1>
+        <span class="count-pill">8 artifacts</span>
+      </div>
+    </header>
+
+    <div class="artifacts-layout">
+
+      <section class="artifact-list" aria-label="Artifact list">
+        <div class="row-box">
+          <div class="row-box__header artifact-row" aria-hidden="true">
+            <span>Name</span>
+            <span>Current</span>
+            <span class="artifact-row__updated">Updated</span>
+          </div>
+          <ul class="row-box__rows plain-list">
+            <li>
+              <a class="artifact-row artifact-row--link" href="artifacts.html">
+                <span class="artifact-row__name">
+                  <span class="file-icon"><svg class="icon" width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M9 2H4.5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V5.5z"/><path d="M9 2v3.5h3.5"/></svg></span>
+                  <span class="artifact-row__filename">openapi.json</span>
+                  <span class="artifact-row__count">3 versions</span>
+                </span>
+                <span class="artifact-row__version">v3</span>
+                <span class="artifact-row__updated">Oct 4</span>
+              </a>
+            </li>
+            <li>
+              <a class="artifact-row artifact-row--link" href="artifacts.html">
+                <span class="artifact-row__name">
+                  <span class="file-icon"><svg class="icon" width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M9 2H4.5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V5.5z"/><path d="M9 2v3.5h3.5"/></svg></span>
+                  <span class="artifact-row__filename">curl-walkthrough.sh</span>
+                  <span class="artifact-row__count">1 version</span>
+                </span>
+                <span class="artifact-row__version">v1</span>
+                <span class="artifact-row__updated">Oct 4</span>
+              </a>
+            </li>
+            <li>
+              <a class="artifact-row artifact-row--link" href="artifacts.html">
+                <span class="artifact-row__name">
+                  <span class="file-icon"><svg class="icon" width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M9 2H4.5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V5.5z"/><path d="M9 2v3.5h3.5"/></svg></span>
+                  <span class="artifact-row__filename">PLAN.md</span>
+                  <span class="artifact-row__count">7 versions</span>
+                </span>
+                <span class="artifact-row__version">v7</span>
+                <span class="artifact-row__updated">Oct 3</span>
+              </a>
+            </li>
+            <li>
+              <a class="artifact-row artifact-row--link" href="artifacts.html">
+                <span class="artifact-row__name">
+                  <span class="file-icon"><svg class="icon" width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M9 2H4.5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V5.5z"/><path d="M9 2v3.5h3.5"/></svg></span>
+                  <span class="artifact-row__filename">auth-flow.png</span>
+                  <span class="artifact-row__count">1 version</span>
+                </span>
+                <span class="artifact-row__version">v1</span>
+                <span class="artifact-row__updated">Oct 3</span>
+              </a>
+            </li>
+            <li>
+              <a class="artifact-row artifact-row--link" href="artifacts.html" aria-current="true">
+                <span class="artifact-row__name">
+                  <span class="file-icon"><svg class="icon" width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M9 2H4.5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V5.5z"/><path d="M9 2v3.5h3.5"/></svg></span>
+                  <span class="artifact-row__filename">schema.png</span>
+                  <span class="artifact-row__count">2 versions</span>
+                </span>
+                <span class="artifact-row__version">v2</span>
+                <span class="artifact-row__updated">Oct 1</span>
+              </a>
+            </li>
+            <li>
+              <a class="artifact-row artifact-row--link" href="artifacts.html">
+                <span class="artifact-row__name">
+                  <span class="file-icon"><svg class="icon" width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M9 2H4.5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V5.5z"/><path d="M9 2v3.5h3.5"/></svg></span>
+                  <span class="artifact-row__filename">V2__artifact_versions.sql</span>
+                  <span class="artifact-row__count">1 version</span>
+                </span>
+                <span class="artifact-row__version">v1</span>
+                <span class="artifact-row__updated">Oct 1</span>
+              </a>
+            </li>
+            <li>
+              <a class="artifact-row artifact-row--link" href="artifacts.html">
+                <span class="artifact-row__name">
+                  <span class="file-icon"><svg class="icon" width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M9 2H4.5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V5.5z"/><path d="M9 2v3.5h3.5"/></svg></span>
+                  <span class="artifact-row__filename">erd-sketch.jpg</span>
+                  <span class="artifact-row__count">2 versions</span>
+                </span>
+                <span class="artifact-row__version">v2</span>
+                <span class="artifact-row__updated">Sep 29</span>
+              </a>
+            </li>
+            <li>
+              <a class="artifact-row artifact-row--link" href="artifacts.html">
+                <span class="artifact-row__name">
+                  <span class="file-icon"><svg class="icon" width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M9 2H4.5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V5.5z"/><path d="M9 2v3.5h3.5"/></svg></span>
+                  <span class="artifact-row__filename">compose.yaml</span>
+                  <span class="artifact-row__count">1 version</span>
+                </span>
+                <span class="artifact-row__version">v1</span>
+                <span class="artifact-row__updated">Sep 22</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <aside class="artifact-detail" aria-labelledby="artifact-title">
+        <div class="artifact-detail__header">
+          <div class="artifact-detail__title-row">
+            <span class="file-icon file-icon--large"><svg class="icon" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M9 2H4.5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V5.5z"/><path d="M9 2v3.5h3.5"/></svg></span>
+            <h2 class="artifact-detail__title" id="artifact-title">schema.png</h2>
+            <button class="icon-button" type="button" aria-label="Rename artifact">
+              <svg class="icon" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.5 3.5l2 2L6 12H4v-2z"/></svg>
+            </button>
+            <a class="icon-button" href="artifacts.html" aria-label="Close">
+              <svg class="icon" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+            </a>
+          </div>
+          <div class="artifact-detail__id">
+            <code>3f2a9c1e-7b4d-4e0a-9c55-1d2e8f60b7a1</code>
+            <button class="icon-button icon-button--tiny" type="button" aria-label="Copy artifact ID">
+              <svg class="icon" width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M10.5 5.5V4a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 4v5A1.5 1.5 0 0 0 4 10.5h1.5"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="artifact-preview">
+          <div class="artifact-preview__frame">
+            <svg class="icon" width="22" height="22" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="12" height="10" rx="1.5"/><circle cx="6" cy="6.5" r="1.2"/><path d="M14 11l-3.5-3.5L4 13"/></svg>
+            <span>[Preview of v2 · schema.png]</span>
+          </div>
+        </div>
+
+        <section class="versions" aria-labelledby="versions-title">
+          <div class="versions__heading">
+            <h3 class="versions__title" id="versions-title">Versions</h3>
+            <span class="versions__summary">2 · 412 KB in total</span>
+          </div>
+          <ol class="plain-list" reversed>
+            <li class="version version--current">
+              <div class="version__head">
+                <span class="version__ordinal">v2</span>
+                <span class="version__label">Identity split from versions</span>
+                <a class="icon-button" href="#" download aria-label="Download v2">
+                  <svg class="icon" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v8M4.5 7L8 10.5 11.5 7M3 13.5h10"/></svg>
+                </a>
+                <button class="icon-button" type="button" aria-label="Delete v2">
+                  <svg class="icon" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.6 8.5a1 1 0 0 0 1 .9h3.8a1 1 0 0 0 1-.9l.6-8.5"/></svg>
+                </button>
+              </div>
+              <span class="version__meta">schema.png · 236 KB · <time datetime="2026-10-01T17:45">Thu, Oct 1 · 17:45</time></span>
+              <a class="version__entry" href="timeline.html">
+                <svg class="icon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 3v5a2 2 0 0 0 2 2h6M9.5 7.5L12 10l-2.5 2.5"/></svg>
+                <span>Split artifact into identity and version entities</span>
+              </a>
+            </li>
+            <li class="version">
+              <div class="version__head">
+                <span class="version__ordinal">v1</span>
+                <span class="version__label">First draft</span>
+                <a class="icon-button" href="#" download aria-label="Download v1">
+                  <svg class="icon" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v8M4.5 7L8 10.5 11.5 7M3 13.5h10"/></svg>
+                </a>
+                <button class="icon-button" type="button" aria-label="Delete v1">
+                  <svg class="icon" width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4.5h10M6.5 4.5V3h3v1.5M4.5 4.5l.6 8.5a1 1 0 0 0 1 .9h3.8a1 1 0 0 0 1-.9l.6-8.5"/></svg>
+                </button>
+              </div>
+              <span class="version__meta">schema-draft.png · 176 KB · <time datetime="2026-09-28T10:12">Mon, Sep 28 · 10:12</time></span>
+              <a class="version__entry" href="timeline.html">
+                <svg class="icon" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 3v5a2 2 0 0 0 2 2h6M9.5 7.5L12 10l-2.5 2.5"/></svg>
+                <span>Added persistence layer: entities, repositories, file storage</span>
+              </a>
+            </li>
+          </ol>
+          <p class="versions__footnote">Deleting the only remaining version removes the artifact.</p>
+        </section>
+      </aside>
+
+    </div>
+  </main>
+
+</div>
+</body>
+</html>

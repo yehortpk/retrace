@@ -1,0 +1,184 @@
+.entry-dialog {
+  width: calc(100% - 32px);
+  max-width: 640px;
+  margin: 88px auto 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-dialog);
+}
+
+.entry-dialog::backdrop {
+  background: var(--color-backdrop);
+}
+
+.entry-dialog__form {
+  display: flex;
+  flex-direction: column;
+}
+
+.entry-dialog__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 12px 4px 16px;
+}
+
+.entry-dialog__header > .icon {
+  color: var(--color-icon-faint);
+}
+
+.entry-dialog__title {
+  flex-grow: 1;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.project-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Description and note read as the entry itself rather than as boxed fields. */
+.entry-dialog__description,
+.entry-dialog__note {
+  display: block;
+  width: calc(100% - 12px);
+  margin: 0 6px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text);
+}
+
+.entry-dialog__description {
+  margin-top: 4px;
+  padding: 8px 10px;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.entry-dialog__description:focus {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -1px;
+}
+
+.entry-dialog__note {
+  padding: 6px 10px;
+  resize: none;
+  font-size: 14px;
+  line-height: 1.5;
+  outline: none;
+}
+
+.attachments {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 16px 4px;
+}
+
+.attachments__title {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-subtle);
+}
+
+.attachment {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+}
+
+.attachment__file {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.attachment__file > .icon {
+  color: var(--color-text-subtle);
+}
+
+.attachment__name {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.attachment__size {
+  flex-grow: 1;
+  font-size: 12px;
+  color: var(--color-text-subtle);
+}
+
+.attachment__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.attachment__target {
+  flex: 1 1 220px;
+  width: auto;
+}
+
+.attachment__label {
+  flex: 1 1 160px;
+  width: auto;
+}
+
+.dropzone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px;
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.dropzone:focus-within {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -1px;
+}
+
+.dropzone__browse {
+  color: var(--color-accent);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.dropzone__browse:hover {
+  text-decoration: underline;
+}
+
+.entry-dialog__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-top: 1px solid var(--color-divider);
+}
+
+.entry-dialog__shortcut {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--color-text-subtle);
+}

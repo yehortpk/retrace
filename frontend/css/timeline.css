@@ -1,0 +1,129 @@
+.timeline {
+  gap: 28px;
+}
+
+.day {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.day__heading {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.day__date {
+  font-weight: 400;
+  color: var(--color-text-subtle);
+}
+
+/* One Claude Code session's entries, or a run of entries recorded outside any session. */
+.entry-group {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.entry-group > * + * {
+  border-top: 1px solid var(--color-divider);
+}
+
+.session-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 14px;
+  background: var(--color-surface-muted);
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.session-bar__id {
+  font-family: var(--font-mono);
+  color: var(--color-text);
+}
+
+.entry {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--color-surface);
+}
+
+.entry__time {
+  padding-top: 1px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text-subtle);
+}
+
+.entry__body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.entry__description {
+  font-weight: 500;
+}
+
+.entry__note {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.entry__note .icon {
+  margin-top: 2px;
+}
+
+.entry__artifacts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-top: 2px;
+}
+
+.artifact-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-muted);
+  font-size: 12px;
+}
+
+.artifact-chip:hover {
+  border-color: var(--color-border-strong);
+}
+
+.artifact-chip .icon,
+.artifact-chip__version {
+  color: var(--color-text-subtle);
+}
+
+.artifact-chip__version {
+  font-family: var(--font-mono);
+}
+
+.timeline__more {
+  align-self: center;
+}
+
+@media (max-width: 480px) {
+  .entry {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+  }
+}

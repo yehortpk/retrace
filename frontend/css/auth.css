@@ -1,0 +1,111 @@
+/* Sign in, create account, and the key shown once after registration. */
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 48px 16px;
+  background: var(--color-surface-sunken);
+}
+
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 28px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.auth-card--wide {
+  max-width: 540px;
+  gap: 18px;
+}
+
+.auth-card__header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.auth-card--wide .auth-card__header {
+  gap: 6px;
+  margin-bottom: 0;
+}
+
+.auth-card__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.auth-card__title .icon {
+  color: var(--color-accent);
+}
+
+.auth-card__lede {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.auth-card--wide .auth-card__lede {
+  font-size: 14px;
+}
+
+.auth-card__lede strong {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.auth-card__submit {
+  margin-top: 4px;
+}
+
+.auth-card__continue {
+  align-self: flex-start;
+}
+
+.auth-switch {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.setup-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0;
+  padding: 0 0 0 20px;
+  font-size: 13.5px;
+  color: var(--color-text-secondary);
+}
+
+.setup-steps code {
+  font-size: 12.5px;
+}
+
+@media (max-width: 420px) {
+  .auth-card {
+    padding: 20px;
+  }
+}

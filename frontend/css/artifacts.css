@@ -1,0 +1,227 @@
+/* The artifact list, with the selected artifact's version history beside it. */
+.artifacts-layout {
+  flex-grow: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.artifact-list {
+  flex: 999 1 420px;
+  min-width: 0;
+  padding: 20px 24px 48px;
+}
+
+.artifact-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 56px 72px;
+  align-items: center;
+  gap: 12px;
+}
+
+.artifact-row--link {
+  height: 44px;
+  padding: 0 14px;
+  background: var(--color-surface);
+}
+
+.artifact-row--link:hover {
+  background: var(--color-surface-muted);
+}
+
+.artifact-row--link[aria-current="true"] {
+  background: var(--color-accent-selected);
+}
+
+.artifact-row__name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.artifact-row__filename {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.artifact-row__count {
+  flex-shrink: 0;
+  font-size: 12px;
+  color: var(--color-text-subtle);
+}
+
+.artifact-row__version {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.artifact-row__updated {
+  text-align: right;
+  font-size: 12px;
+  color: var(--color-text-subtle);
+}
+
+/* Detail panel */
+
+.artifact-detail {
+  flex: 1 1 400px;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.artifact-detail__header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-divider);
+}
+
+.artifact-detail__title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.artifact-detail__title {
+  flex-grow: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.artifact-detail__id {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-text-subtle);
+}
+
+.artifact-detail__id code {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.artifact-preview {
+  padding: 20px;
+}
+
+.artifact-preview__frame {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  aspect-ratio: 16 / 10;
+  border: 1px solid var(--color-divider);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface-sunken);
+  font-size: 12px;
+  color: var(--color-text-subtle);
+}
+
+.versions {
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px 24px;
+}
+
+.versions__heading {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding-bottom: 4px;
+}
+
+.versions__title {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.versions__summary,
+.versions__footnote {
+  font-size: 12px;
+  color: var(--color-text-subtle);
+}
+
+.versions__footnote {
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-divider);
+}
+
+.version {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 0;
+  border-top: 1px solid var(--color-divider);
+}
+
+.version__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.version__head .icon-button {
+  --icon-button-size: 28px;
+}
+
+.version__ordinal {
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+  background: var(--color-surface-hover);
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.version--current .version__ordinal {
+  background: var(--color-accent-badge);
+  color: var(--color-accent);
+}
+
+.version__label {
+  flex-grow: 1;
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.version__meta {
+  font-size: 12px;
+  color: var(--color-text-subtle);
+}
+
+.version__entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+}
+
+.version__entry:hover {
+  color: var(--color-text);
+}
+
+.version__entry .icon {
+  margin-top: 2px;
+}
+
+@media (max-width: 600px) {
+  .artifact-list {
+    padding: 16px 16px 32px;
+  }
+}
