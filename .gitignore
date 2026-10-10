@@ -8,6 +8,7 @@ storage/
 .idea/
 *.iml
 out/
+bin/
 dist/
 frontend/dist/
 .claude/
