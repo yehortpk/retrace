@@ -182,3 +182,22 @@
   font-size: 12px;
   color: var(--color-text-subtle);
 }
+
+.dropzone--active {
+  border-color: var(--color-accent);
+  background: var(--color-accent-surface);
+}
+
+.entry-dialog__error {
+  margin: 8px 16px 0;
+}
+
+.entry-dialog__occurred-at {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.entry-dialog__occurred-at .input {
+  width: auto;
+}

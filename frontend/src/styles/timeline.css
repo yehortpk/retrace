@@ -127,3 +127,7 @@
     gap: 4px;
   }
 }
+
+.entry__note > span {
+  white-space: pre-line;
+}

@@ -249,3 +249,37 @@ textarea.input {
   border-color: var(--color-border-code);
   color: var(--color-text);
 }
+
+.button:disabled,
+.icon-button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+
+/* States the static mockups had no data to show. */
+
+.form-error {
+  font-size: 13px;
+  color: var(--color-danger);
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 20px;
+  border: 1px dashed var(--color-border-strong);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-muted);
+}
+
+.empty-state__code {
+  padding: 4px 8px;
+  border: 1px solid var(--color-border-code);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface-muted);
+  font-size: 12.5px;
+  color: var(--color-text);
+  user-select: all;
+}
