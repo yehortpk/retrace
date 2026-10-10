@@ -3,14 +3,14 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Create account · Retrace</title>
+<title>Sign in · Retrace</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="css/tokens.css">
-<link rel="stylesheet" href="css/base.css">
-<link rel="stylesheet" href="css/controls.css">
-<link rel="stylesheet" href="css/auth.css">
+<link rel="stylesheet" href="../src/styles/tokens.css">
+<link rel="stylesheet" href="../src/styles/base.css">
+<link rel="stylesheet" href="../src/styles/controls.css">
+<link rel="stylesheet" href="../src/styles/auth.css">
 </head>
 <body>
 <main class="auth-page">
@@ -21,26 +21,20 @@
 
   <form class="auth-card" method="post">
     <div class="auth-card__header">
-      <h1 class="auth-card__title">Create your account</h1>
-      <p class="auth-card__lede">You’ll get an API key for Claude Code right after.</p>
+      <h1 class="auth-card__title">Sign in</h1>
     </div>
     <div class="field">
       <label class="field__label" for="username">Username</label>
       <input class="input input--large" id="username" name="username" type="text" autocomplete="username" required>
     </div>
     <div class="field">
-      <label class="field__label" for="email">Email</label>
-      <input class="input input--large" id="email" name="email" type="email" autocomplete="email" required>
-    </div>
-    <div class="field">
       <label class="field__label" for="password">Password</label>
-      <input class="input input--large" id="password" name="password" type="password" autocomplete="new-password" minlength="8" aria-describedby="password-hint" required>
-      <span class="field__hint" id="password-hint">At least 8 characters</span>
+      <input class="input input--large" id="password" name="password" type="password" autocomplete="current-password" required>
     </div>
-    <button class="button button--primary button--large auth-card__submit" type="submit">Create account</button>
+    <button class="button button--primary button--large auth-card__submit" type="submit">Sign in</button>
   </form>
 
-  <p class="auth-switch">Already have an account? <a class="text-link" href="login.html">Sign in</a></p>
+  <p class="auth-switch">New here? <a class="text-link" href="register.html">Create an account</a></p>
 </main>
 </body>
 </html>
