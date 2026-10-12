@@ -8,7 +8,6 @@ import dev.yetpk.retrace.domain.AppUser;
 import dev.yetpk.retrace.domain.Project;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -27,7 +26,7 @@ class EntryControllerTest extends WebTestSupport {
         return mockMvc.perform(postEntry(project)
                         .file(entryPart(entryJson))
                         .file(filePart(filename, content))
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andReturn();
     }
 
@@ -53,7 +52,7 @@ class EntryControllerTest extends WebTestSupport {
                                 + "\"note\":\"Client asked for annual plans first.\","
                                 + "\"artifacts\":[{\"name\":\"pricing-page\",\"label\":\"Final\"}]}"))
                         .file(filePart("pricing.png", "image/png", "png-bytes".getBytes(StandardCharsets.UTF_8)))
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.description").value("Shipped the pricing page."))
                 .andExpect(jsonPath("$.note").value("Client asked for annual plans first."))
@@ -71,7 +70,7 @@ class EntryControllerTest extends WebTestSupport {
 
         mockMvc.perform(postEntry(project)
                         .file(entryPart("{\"description\":\"Call with the client.\"}"))
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.versions.length()").value(0));
     }
@@ -85,7 +84,7 @@ class EntryControllerTest extends WebTestSupport {
                         .file(entryPart("{\"description\":\"Revised it.\",\"artifacts\":[{\"artifactId\":\"%s\"}]}"
                                 .formatted(artifactId)))
                         .file(filePart("pricing-v2.txt", "second version"))
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.versions[0].artifactId").value(artifactId.toString()))
                 .andExpect(jsonPath("$.versions[0].ordinal").value(2));
@@ -114,7 +113,7 @@ class EntryControllerTest extends WebTestSupport {
         mockMvc.perform(postEntry(project)
                         .file(entryPart("{\"description\":\"x\",\"artifacts\":[{\"name\":\"a\"},{\"name\":\"b\"}]}"))
                         .file(filePart("only-one.txt", "content"))
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.detail").value(Matchers.allOf(
                         Matchers.containsString("2 artifact"),
@@ -129,7 +128,7 @@ class EntryControllerTest extends WebTestSupport {
                         .file(entryPart("{\"description\":\"x\",\"artifacts\":[{\"name\":\"a\"}]}"))
                         .file(filePart("one.txt", "content"))
                         .file(filePart("two.txt", "content"))
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -140,7 +139,7 @@ class EntryControllerTest extends WebTestSupport {
         mockMvc.perform(postEntry(project)
                         .file(entryPart("{\"description\":\"x\",\"artifacts\":[{\"name\":\"a\"}]}"))
                         .file(filePart("empty.txt", ""))
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -150,7 +149,7 @@ class EntryControllerTest extends WebTestSupport {
 
         mockMvc.perform(postEntry(project)
                         .file(entryPart("{\"description\":\"   \"}"))
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -161,7 +160,7 @@ class EntryControllerTest extends WebTestSupport {
         mockMvc.perform(postEntry(project)
                         .file(entryPart("{\"description\":\"x\",\"artifacts\":[{\"label\":\"only a label\"}]}"))
                         .file(filePart("file.txt", "content"))
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -174,7 +173,7 @@ class EntryControllerTest extends WebTestSupport {
                         .file(entryPart(("{\"description\":\"x\",\"artifacts\":"
                                 + "[{\"artifactId\":\"%s\",\"name\":\"also-a-name\"}]}").formatted(artifactId)))
                         .file(filePart("file.txt", "content"))
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isBadRequest());
     }
 
@@ -184,18 +183,19 @@ class EntryControllerTest extends WebTestSupport {
 
         mockMvc.perform(postEntry(project)
                         .file(filePart("orphan.txt", "content"))
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     void RecordEntry_ProjectOwnedByAnotherUser_ShouldReturnNotFound() throws Exception {
-        AppUser other = registerUser("other").user();
+        AppUser other = registerUser("other");
         Project theirs = createProject(other, "Theirs");
 
         mockMvc.perform(postEntry(theirs)
                         .file(entryPart("{\"description\":\"Sneaking in.\"}"))
-                        .header(API_KEY_HEADER, ownerKey))
+                        .with(asSession(owner))
+                        .with(validCsrfToken()))
                 .andExpect(status().isNotFound());
 
         assertThat(entryRepository.count()).isZero();
@@ -211,7 +211,7 @@ class EntryControllerTest extends WebTestSupport {
                         .file(entryPart("{\"description\":\"x\",\"artifacts\":[{\"artifactId\":\"%s\"}]}"
                                 .formatted(artifactId)))
                         .file(filePart("file.txt", "content"))
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(second)))
                 .andExpect(status().isNotFound());
     }
 
@@ -224,7 +224,7 @@ class EntryControllerTest extends WebTestSupport {
         mockMvc.perform(postEntry(project)
                         .file(entryPart("{\"description\":\"x\",\"artifacts\":[{\"name\":\"big\"}]}"))
                         .file(filePart("big.bin", "application/octet-stream", tooBig))
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isContentTooLarge())
                 .andExpect(jsonPath("$.requestedBytes").value(2048))
                 .andExpect(jsonPath("$.remainingBytes").value(1024));
@@ -247,14 +247,14 @@ class EntryControllerTest extends WebTestSupport {
         MvcResult viaKey = mockMvc.perform(postEntry(project)
                         .file(entryPart(entryJson))
                         .file(filePart("page.txt", "same bytes"))
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isCreated())
                 .andReturn();
         MvcResult viaSession = mockMvc.perform(postEntry(project)
                         .file(entryPart(entryJson))
                         .file(filePart("page.txt", "same bytes"))
                         .with(asSession(owner))
-                        .with(csrf()))
+                        .with(validCsrfToken()))
                 .andExpect(status().isCreated())
                 .andReturn();
 

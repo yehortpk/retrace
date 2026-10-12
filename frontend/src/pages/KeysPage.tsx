@@ -1,26 +1,48 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { type FormEvent, useState } from 'react';
+import { useParams } from 'react-router';
 import { describeError } from '../api/client.ts';
 import { issueKey, keysKey, revokeKey, useKeys } from '../api/keys.ts';
+import { useProject } from '../api/projects.ts';
 import type { ApiKeyView, IssuedKeyResponse } from '../api/types.ts';
 import { CheckIcon } from '../components/icons.tsx';
-import { SecretExportLine } from '../components/SecretExportLine.tsx';
+import { RepoConnection } from '../components/RepoConnection.tsx';
 import { Topbar } from '../components/Topbar.tsx';
 import { formatShortDate, formatSince } from '../lib/format.ts';
 
+/** A project's keys. Each one connects a repository to this project, and reaches nothing else. */
 export function KeysPage() {
-  const keys = useKeys();
+  const { projectId = '' } = useParams();
+  const { project, isLoading } = useProject(projectId);
+
+  if (isLoading) {
+    return null;
+  }
+  if (!project) {
+    return (
+      <>
+        <title>Project not found · Retrace</title>
+        <Topbar title="Project not found" />
+      </>
+    );
+  }
+  // Keyed on the project, so a key issued for one project is never left on screen under another.
+  return <ProjectKeys key={project.id} projectId={project.id} projectName={project.name} />;
+}
+
+function ProjectKeys({ projectId, projectName }: { projectId: string; projectName: string }) {
+  const keys = useKeys(projectId);
   const [name, setName] = useState('');
   // Held only in memory: once dismissed or navigated away from, the plaintext is gone for good.
   const [issued, setIssued] = useState<IssuedKeyResponse | null>(null);
   const queryClient = useQueryClient();
 
   const issuing = useMutation({
-    mutationFn: () => issueKey(name.trim()),
+    mutationFn: () => issueKey(projectId, name.trim()),
     onSuccess: async issuedKey => {
       setIssued(issuedKey);
       setName('');
-      await queryClient.invalidateQueries({ queryKey: keysKey });
+      await queryClient.invalidateQueries({ queryKey: keysKey(projectId) });
     },
   });
 
@@ -31,19 +53,20 @@ export function KeysPage() {
 
   return (
     <>
-      <title>API keys · Retrace</title>
-      <Topbar parent="Settings" title="API keys" />
+      <title>{`Keys · ${projectName} · Retrace`}</title>
+      <Topbar parent={projectName} title="Keys" />
 
       <div className="content content--narrow">
         <p className="keys-intro">
-          Claude Code sends one of these keys with every entry it records. A key is shown once, when it is issued
-          — after that only its ID is kept.
+          A key connects one repository to this project: your agent’s plugin sends it with every entry it records,
+          and it reaches this project and no other. A key is shown once, when it is issued — after that only its ID
+          is kept.
         </p>
 
         <form className="key-form" onSubmit={submit}>
           <div className="field">
             <label className="field__label" htmlFor="key-name">New key name</label>
-            <input className="input" id="key-name" name="name" type="text" placeholder="e.g. work laptop"
+            <input className="input" id="key-name" name="name" type="text" placeholder="e.g. work laptop checkout"
                    maxLength={100} required value={name} onChange={event => setName(event.target.value)} />
           </div>
           <button className="button button--primary button--medium" type="submit" disabled={issuing.isPending}>
@@ -61,7 +84,7 @@ export function KeysPage() {
             <p className="key-issued__warning">
               Copy it now. It can’t be shown again — if it’s lost, issue a new one and revoke this one.
             </p>
-            <SecretExportLine apiKey={issued.apiKey} />
+            <RepoConnection apiKey={issued.apiKey} />
             <button className="button button--ghost key-issued__dismiss" type="button" onClick={() => setIssued(null)}>
               I’ve saved it
             </button>
@@ -70,23 +93,25 @@ export function KeysPage() {
 
         {keys.isError && <p className="form-error" role="alert">{keys.error.message}</p>}
         {keys.data?.length === 0 && (
-          <p className="empty-state">No active keys. Issue one for each machine Claude Code runs on.</p>
+          <p className="empty-state">
+            No active keys. Issue one for each checkout of the repository an agent works in.
+          </p>
         )}
-        {keys.data && keys.data.length > 0 && <KeysTable apiKeys={keys.data} />}
+        {keys.data && keys.data.length > 0 && <KeysTable projectId={projectId} apiKeys={keys.data} />}
       </div>
     </>
   );
 }
 
-function KeysTable({ apiKeys }: { apiKeys: ApiKeyView[] }) {
+function KeysTable({ projectId, apiKeys }: { projectId: string; apiKeys: ApiKeyView[] }) {
   const queryClient = useQueryClient();
   const revocation = useMutation({
-    mutationFn: (keyId: string) => revokeKey(keyId),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: keysKey }),
+    mutationFn: (keyId: string) => revokeKey(projectId, keyId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: keysKey(projectId) }),
   });
 
   function confirmRevocation(apiKey: ApiKeyView) {
-    if (window.confirm(`Revoke “${apiKey.name}”? Anything still using it will be refused from now on.`)) {
+    if (window.confirm(`Revoke “${apiKey.name}”? The repository using it will be refused from now on.`)) {
       revocation.mutate(apiKey.id);
     }
   }

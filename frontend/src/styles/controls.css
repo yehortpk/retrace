@@ -219,7 +219,7 @@ textarea.input {
   border-radius: var(--radius-md);
 }
 
-/* A key shown once: the export line plus its copy button. */
+/* Text to copy exactly — a key, or the file carrying one — plus its copy button. */
 .secret {
   display: flex;
   align-items: flex-start;
@@ -242,6 +242,13 @@ textarea.input {
   font-size: 12.5px;
   line-height: 1.6;
   word-break: break-all;
+}
+
+/* A multi-line value, such as a config file, keeps its line breaks and indentation. */
+.secret__value--block {
+  margin: 0;
+  font-family: var(--font-mono);
+  white-space: pre-wrap;
 }
 
 .secret .button {
@@ -282,4 +289,24 @@ textarea.input {
   font-size: 12.5px;
   color: var(--color-text);
   user-select: all;
+}
+
+/* The steps that connect a repository to a project with a freshly issued key. */
+.repo-connection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0 0 0 20px;
+  font-size: 13.5px;
+  color: var(--color-text-secondary);
+}
+
+/* Stays a list item, so the step keeps its number; the copy block sits under the instruction. */
+.repo-connection li > * + * {
+  margin-top: 6px;
+}
+
+.repo-connection code {
+  font-size: 12.5px;
 }

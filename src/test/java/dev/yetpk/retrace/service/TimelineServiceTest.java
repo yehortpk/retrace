@@ -34,8 +34,8 @@ class TimelineServiceTest extends ServiceTestSupport {
     private TransactionTemplate transactionTemplate;
 
     @BeforeEach
-    void createProject() {
-        project = projectService.createProject(owner, "Website", null);
+    void setUpProject() {
+        project = createProject(owner, "Website");
     }
 
     private RecordEntryCommand command(String description, String note) {
@@ -135,7 +135,7 @@ class TimelineServiceTest extends ServiceTestSupport {
 
     @Test
     void RecordEntry_ArtifactIdFromAnotherProject_ShouldThrowNotFound() {
-        Project other = projectService.createProject(owner, "Other", null);
+        Project other = createProject(owner, "Other");
         timelineService.recordEntry(other, commandWith("Theirs", attachmentNamed("logo", null, 10)));
         UUID foreignArtifactId = artifactRepository.findByProjectId(other.getId()).getFirst().getId();
 
@@ -146,7 +146,7 @@ class TimelineServiceTest extends ServiceTestSupport {
 
     @Test
     void RecordEntry_EntriesInSeveralProjects_ShouldNeverLinkAVersionAcrossProjects() {
-        Project other = projectService.createProject(owner, "Other", null);
+        Project other = createProject(owner, "Other");
         timelineService.recordEntry(project, commandWith("Mine", attachmentNamed("logo", null, 10)));
         timelineService.recordEntry(other, commandWith("Theirs", attachmentNamed("logo", null, 10)));
 
@@ -254,7 +254,7 @@ class TimelineServiceTest extends ServiceTestSupport {
 
     @Test
     void FindTimeline_AnotherProjectsEntries_ShouldExcludeThem() {
-        Project other = projectService.createProject(owner, "Other", null);
+        Project other = createProject(owner, "Other");
         timelineService.recordEntry(other, command("Theirs", null));
         timelineService.recordEntry(project, command("Mine", null));
 

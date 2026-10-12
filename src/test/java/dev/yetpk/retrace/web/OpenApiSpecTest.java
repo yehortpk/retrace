@@ -49,9 +49,9 @@ class OpenApiSpecTest extends WebTestSupport {
         List<Endpoint> expected = List.of(
                 new Endpoint("/api/auth/register", "post"),
                 new Endpoint("/api/auth/me", "get"),
-                new Endpoint("/api/keys", "get"),
-                new Endpoint("/api/keys", "post"),
-                new Endpoint("/api/keys/{keyId}", "delete"),
+                new Endpoint("/api/projects/{projectId}/keys", "get"),
+                new Endpoint("/api/projects/{projectId}/keys", "post"),
+                new Endpoint("/api/projects/{projectId}/keys/{keyId}", "delete"),
                 new Endpoint("/api/projects", "get"),
                 new Endpoint("/api/projects", "post"),
                 new Endpoint("/api/projects/{projectId}/entries", "post"),
@@ -79,6 +79,44 @@ class OpenApiSpecTest extends WebTestSupport {
         assertThat(apiKey.get("type").asString()).isEqualTo("apiKey");
         assertThat(apiKey.get("in").asString()).isEqualTo("header");
         assertThat(apiKey.get("name").asString()).isEqualTo("X-API-Key");
+    }
+
+    @Test
+    void FindApiDocs_Spec_ShouldNoLongerListUserWideKeyPaths() throws Exception {
+        JsonNode paths = readSpec().get("paths");
+
+        assertThat(paths.has("/api/keys")).isFalse();
+        assertThat(paths.has("/api/keys/{keyId}")).isFalse();
+    }
+
+    /** A key reaching these is refused, so the spec has to say they need the session instead. */
+    @Test
+    void FindApiDocs_SessionOnlyEndpoints_ShouldRequireTheSessionScheme() throws Exception {
+        JsonNode paths = readSpec().get("paths");
+
+        record Endpoint(String path, String method) {
+        }
+        List<Endpoint> sessionOnly = List.of(
+                new Endpoint("/api/projects", "get"),
+                new Endpoint("/api/projects", "post"),
+                new Endpoint("/api/projects/{projectId}/keys", "get"),
+                new Endpoint("/api/projects/{projectId}/keys", "post"),
+                new Endpoint("/api/projects/{projectId}/keys/{keyId}", "delete"));
+
+        for (Endpoint endpoint : sessionOnly) {
+            JsonNode security = paths.get(endpoint.path()).get(endpoint.method()).get("security");
+            assertThat(security).as("%s %s", endpoint.method(), endpoint.path()).isNotNull();
+            assertThat(security.toString()).as("%s %s", endpoint.method(), endpoint.path())
+                    .contains("session")
+                    .doesNotContain("apiKey");
+        }
+    }
+
+    @Test
+    void FindApiDocs_CurrentUser_ShouldDescribeTheKeysProjectId() throws Exception {
+        JsonNode schema = readSpec().get("components").get("schemas").get("CurrentUserView");
+
+        assertThat(schema.get("properties").has("projectId")).isTrue();
     }
 
     @Test

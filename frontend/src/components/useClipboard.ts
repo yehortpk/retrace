@@ -13,8 +13,13 @@ export function useClipboard() {
   }, [isCopied]);
 
   async function copyText(text: string) {
-    await navigator.clipboard.writeText(text);
-    setIsCopied(true);
+    try {
+      await navigator.clipboard.writeText(text);
+      setIsCopied(true);
+    } catch {
+      // Clipboard access denied or unavailable (e.g. non-HTTPS page): leave the button as is.
+      setIsCopied(false);
+    }
   }
 
   return { isCopied, copyText };

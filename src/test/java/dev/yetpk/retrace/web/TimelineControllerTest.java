@@ -34,7 +34,7 @@ class TimelineControllerTest extends WebTestSupport {
 
     private MvcResult findTimeline(Project project, String query) throws Exception {
         return mockMvc.perform(get("/api/projects/{projectId}/timeline" + query, project.getId())
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isOk())
                 .andReturn();
     }
@@ -48,7 +48,7 @@ class TimelineControllerTest extends WebTestSupport {
         entryRepository.save(new Entry(project, base.plusDays(2), "Newest", null, null));
 
         mockMvc.perform(get("/api/projects/{projectId}/timeline", project.getId())
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].description").value("Newest"))
                 .andExpect(jsonPath("$[1].description").value("Middle"))
@@ -106,7 +106,7 @@ class TimelineControllerTest extends WebTestSupport {
 
         mockMvc.perform(get("/api/projects/{projectId}/timeline", project.getId())
                         .param("since", base.plusHours(1).toString())
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].description").value("After"));
@@ -119,7 +119,7 @@ class TimelineControllerTest extends WebTestSupport {
 
         mockMvc.perform(get("/api/projects/{projectId}/timeline", project.getId())
                         .param("since", "2027-01-01T00:00:00Z")
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
     }
@@ -131,11 +131,11 @@ class TimelineControllerTest extends WebTestSupport {
                         .file(entryPart("{\"description\":\"Shipped it.\","
                                 + "\"artifacts\":[{\"name\":\"page\",\"label\":\"Final\"}]}"))
                         .file(filePart("page.txt", "bytes"))
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isCreated());
 
         mockMvc.perform(get("/api/projects/{projectId}/timeline", project.getId())
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].versions.length()").value(1))
                 .andExpect(jsonPath("$[0].versions[0].artifactName").value("page"))
@@ -144,12 +144,12 @@ class TimelineControllerTest extends WebTestSupport {
 
     @Test
     void FindTimeline_ProjectOwnedByAnotherUser_ShouldReturnNotFound() throws Exception {
-        AppUser other = registerUser("other").user();
+        AppUser other = registerUser("other");
         Project theirs = createProject(other, "Theirs");
         entryRepository.save(new Entry(theirs, OffsetDateTime.now(), "Their entry", null, null));
 
         mockMvc.perform(get("/api/projects/{projectId}/timeline", theirs.getId())
-                        .header(API_KEY_HEADER, ownerKey))
+                        .with(asSession(owner)))
                 .andExpect(status().isNotFound());
     }
 
@@ -161,7 +161,7 @@ class TimelineControllerTest extends WebTestSupport {
         entryRepository.save(new Entry(alsoMine, OffsetDateTime.now(), "In the other", null, null));
 
         mockMvc.perform(get("/api/projects/{projectId}/timeline", mine.getId())
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(mine)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].description").value("In mine"));

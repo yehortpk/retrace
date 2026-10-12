@@ -50,11 +50,16 @@ public class SecurityConfig {
                                 "/swagger-ui.html", "/swagger-ui/**").permitAll()
                         .requestMatchers("/", "/index.html", "/assets/**", "/favicon.ico").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
-                        // Session only: a key must not be able to mint or revoke keys, or a leaked
-                        // key would be able to issue its own replacements and outlive its revocation.
-                        // Both credentials grant ROLE_USER, so the rule has to name the authority only
-                        // a form login carries.
-                        .requestMatchers("/api/keys/**").hasAuthority(SessionAuthority.SESSION)
+                        // Session only. Both credentials grant ROLE_USER, so these rules have to name
+                        // the authority only a form login carries.
+                        //
+                        // A key is confined to its project, so it must not list the owner's other
+                        // projects or create new ones. The exact path only: everything nested under
+                        // a project is reachable by its key, and CurrentProjectResolver confines it.
+                        .requestMatchers("/api/projects").hasAuthority(SessionAuthority.SESSION)
+                        // A key must not be able to mint or revoke keys, or a leaked key would be able
+                        // to issue its own replacements and outlive its revocation.
+                        .requestMatchers("/api/projects/*/keys/**").hasAuthority(SessionAuthority.SESSION)
                         .anyRequest().authenticated())
                 // Skipped only for requests carrying X-API-Key. A browser cannot add that header
                 // cross-origin without a CORS preflight, and no CORS is configured, so it cannot be
@@ -96,9 +101,10 @@ public class SecurityConfig {
                         // An unauthenticated API call gets a 401 rather than a redirect to a login
                         // page: the caller may well be a curl with no browser to redirect.
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-                        // A valid key reaching /api/keys is authenticated but not permitted, which is
-                        // a 403. Without this the entry point would answer 401 and tell the caller to
-                        // present a credential it has already presented correctly.
+                        // A valid key reaching a session-only path is authenticated but not
+                        // permitted, which is a 403. Without this the entry point would answer 401
+                        // and tell the caller to present a credential it has already presented
+                        // correctly.
                         //
                         // The status is set directly rather than with sendError, which would dispatch
                         // to the error page and run this chain a second time — that pass carries no

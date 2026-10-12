@@ -10,34 +10,25 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Creates a user and, in the same transaction, issues the key that lets an agent start recording.
- *
- * <p>Registration issuing a key is deliberate: the product's thesis is that the agent does the
- * remembering, and a new user who has to make a second trip to a settings page before their agent
- * can write anything has a setup step between them and the whole point.
+ * Creates a user. No API key is issued here: a key belongs to a project, and a user with no project
+ * has nothing for a key to point at. Creating a project issues its first key instead (see
+ * {@code ProjectService#createProject}).
  */
 @Service
 public class RegistrationService {
 
     private static final Logger log = LoggerFactory.getLogger(RegistrationService.class);
 
-    /** The name given to the key every new user is registered with. */
-    public static final String DEFAULT_KEY_NAME = "Default key";
-
     private final AppUserRepository appUserRepository;
-    private final ApiKeyService apiKeyService;
     private final PasswordEncoder passwordEncoder;
 
-    public RegistrationService(AppUserRepository appUserRepository, ApiKeyService apiKeyService,
-                               PasswordEncoder passwordEncoder) {
+    public RegistrationService(AppUserRepository appUserRepository, PasswordEncoder passwordEncoder) {
         this.appUserRepository = appUserRepository;
-        this.apiKeyService = apiKeyService;
         this.passwordEncoder = passwordEncoder;
     }
 
     /**
-     * Registers a user and returns them with the plaintext of their first key, which exists only in
-     * this return value and is never recoverable afterwards.
+     * Registers a user, storing only a bcrypt hash of their password.
      *
      * @throws CredentialTakenException if the username or the email is already registered
      */
@@ -50,12 +41,11 @@ public class RegistrationService {
             throw new CredentialTakenException("Email '%s' is already registered".formatted(email));
         }
         AppUser user = appUserRepository.save(new AppUser(username, email, passwordEncoder.encode(password)));
-        IssuedApiKey issued = apiKeyService.issueKey(user, DEFAULT_KEY_NAME);
         log.info("Registered user {} ('{}')", user.getId(), username);
-        return new Registration(user, issued);
+        return new Registration(user);
     }
 
-    /** A newly registered user and the one key issued with them. */
-    public record Registration(AppUser user, IssuedApiKey issuedKey) {
+    /** A newly registered user. */
+    public record Registration(AppUser user) {
     }
 }

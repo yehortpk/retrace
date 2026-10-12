@@ -5,6 +5,9 @@ import dev.yetpk.retrace.domain.Project;
 import dev.yetpk.retrace.repo.EntryRepository;
 import dev.yetpk.retrace.repo.ProjectEntryCount;
 import dev.yetpk.retrace.repo.ProjectRepository;
+import dev.yetpk.retrace.security.ApiKeyService;
+import dev.yetpk.retrace.security.IssuedApiKey;
+import dev.yetpk.retrace.service.dto.CreatedProject;
 import dev.yetpk.retrace.service.dto.ProjectSummary;
 import dev.yetpk.retrace.service.error.NotFoundException;
 import java.util.List;
@@ -22,20 +25,37 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProjectService {
 
+    /** The name given to the key every new project is created with. */
+    public static final String DEFAULT_KEY_NAME = "Default key";
+
     private final ProjectRepository projectRepository;
     private final EntryRepository entryRepository;
     private final ArtifactStorageQuota storageQuota;
+    private final ApiKeyService apiKeyService;
 
     public ProjectService(ProjectRepository projectRepository, EntryRepository entryRepository,
-                          ArtifactStorageQuota storageQuota) {
+                          ArtifactStorageQuota storageQuota, ApiKeyService apiKeyService) {
         this.projectRepository = projectRepository;
         this.entryRepository = entryRepository;
         this.storageQuota = storageQuota;
+        this.apiKeyService = apiKeyService;
     }
 
+    /**
+     * Creates a project and, in the same transaction, issues its first API key. Returns the key's
+     * plaintext, which exists only in this return value and is never recoverable afterwards.
+     *
+     * <p>Issuing the key here is deliberate: the product's thesis is that the agent does the
+     * remembering, and a project that needs a second trip to a settings page before an agent can write
+     * to it has a setup step between its owner and the whole point.
+     */
     @Transactional
-    public Project createProject(AppUser owner, String name, String description) {
-        return projectRepository.save(new Project(owner, name, description, storageQuota.getLimitBytes()));
+    public CreatedProject createProject(AppUser owner, String name, String description) {
+        Project project = projectRepository.save(
+                new Project(owner, name, description, storageQuota.getLimitBytes()));
+        IssuedApiKey key = apiKeyService.issueKey(project, DEFAULT_KEY_NAME);
+        return new CreatedProject(
+                new ProjectSummary(project.getId(), project.getName(), project.getDescription(), 0L), key);
     }
 
     @Transactional(readOnly = true)

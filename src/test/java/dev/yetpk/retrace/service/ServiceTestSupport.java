@@ -1,6 +1,8 @@
 package dev.yetpk.retrace.service;
 
 import dev.yetpk.retrace.domain.AppUser;
+import dev.yetpk.retrace.domain.Project;
+import dev.yetpk.retrace.repo.ApiKeyRepository;
 import dev.yetpk.retrace.repo.AppUserRepository;
 import dev.yetpk.retrace.repo.ArtifactRepository;
 import dev.yetpk.retrace.repo.ArtifactVersionRepository;
@@ -54,6 +56,9 @@ abstract class ServiceTestSupport {
     @Autowired
     protected ArtifactVersionRepository artifactVersionRepository;
 
+    @Autowired
+    protected ApiKeyRepository apiKeyRepository;
+
     @PersistenceContext
     protected EntityManager entityManager;
 
@@ -64,6 +69,7 @@ abstract class ServiceTestSupport {
         artifactVersionRepository.deleteAllInBatch();
         artifactRepository.deleteAllInBatch();
         entryRepository.deleteAllInBatch();
+        apiKeyRepository.deleteAllInBatch();
         projectRepository.deleteAllInBatch();
         appUserRepository.deleteAllInBatch();
         owner = createUser("owner");
@@ -71,6 +77,12 @@ abstract class ServiceTestSupport {
 
     protected AppUser createUser(String username) {
         return appUserRepository.save(new AppUser(username, username + "@example.test", "not-a-real-hash"));
+    }
+
+    /** Creates a project through the service, then resolves it the way every caller of the services does. */
+    protected Project createProject(AppUser projectOwner, String name) {
+        return projectService.findProject(projectOwner,
+                projectService.createProject(projectOwner, name, null).project().id());
     }
 
     /** An attachment of {@code sizeBytes} filler bytes that creates a new artifact named {@code artifactName}. */

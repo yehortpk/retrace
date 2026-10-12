@@ -2,8 +2,7 @@ package dev.yetpk.retrace.web;
 
 import dev.yetpk.retrace.domain.Entry;
 import dev.yetpk.retrace.domain.Project;
-import dev.yetpk.retrace.security.CurrentUserResolver;
-import dev.yetpk.retrace.service.ProjectService;
+import dev.yetpk.retrace.security.CurrentProjectResolver;
 import dev.yetpk.retrace.service.TimelineService;
 import dev.yetpk.retrace.service.dto.AttachmentSpec;
 import dev.yetpk.retrace.service.dto.RecordEntryCommand;
@@ -40,14 +39,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class EntryController {
 
     private final TimelineService timelineService;
-    private final ProjectService projectService;
-    private final CurrentUserResolver currentUserResolver;
+    private final CurrentProjectResolver currentProjectResolver;
 
-    public EntryController(TimelineService timelineService, ProjectService projectService,
-                           CurrentUserResolver currentUserResolver) {
+    public EntryController(TimelineService timelineService, CurrentProjectResolver currentProjectResolver) {
         this.timelineService = timelineService;
-        this.projectService = projectService;
-        this.currentUserResolver = currentUserResolver;
+        this.currentProjectResolver = currentProjectResolver;
     }
 
     @Operation(summary = "Record one entry, optionally with files",
@@ -70,8 +66,8 @@ public class EntryController {
     @ApiResponse(responseCode = "400", description = "Invalid entry, an empty file, or a count mismatch "
             + "between artifacts and files", content = @Content)
     @ApiResponse(responseCode = "401", description = "Missing or invalid credential", content = @Content)
-    @ApiResponse(responseCode = "404", description = "No such project for this owner, or an artifactId "
-            + "from another project", content = @Content)
+    @ApiResponse(responseCode = "404", description = "No such project for this owner, not the project of "
+            + "the presented API key, or an artifactId from another project", content = @Content)
     @ApiResponse(responseCode = "409", description = "Another writer recorded into this project "
             + "concurrently; retry", content = @Content)
     @ApiResponse(responseCode = "413", description = "The batch would exceed the project's storage quota; "
@@ -89,7 +85,7 @@ public class EntryController {
             @PathVariable UUID projectId,
             @RequestPart("entry") @Valid RecordEntryRequest entry,
             @RequestPart(name = "files", required = false) List<MultipartFile> files) {
-        Project project = findProject(projectId);
+        Project project = currentProjectResolver.findProject(projectId);
         List<MultipartFile> uploads = files == null ? List.of() : files;
         List<RecordEntryRequest.ArtifactAttachment> attachments = entry.attachmentsOrEmpty();
         validatePairing(attachments, uploads);
@@ -98,10 +94,6 @@ public class EntryController {
                 entry.occurredAt(), entry.description(), entry.note(), entry.sessionId(),
                 toAttachmentSpecs(attachments, uploads)));
         return ResponseEntity.status(HttpStatus.CREATED).body(timelineService.findEntry(project, recorded.getId()));
-    }
-
-    private Project findProject(UUID projectId) {
-        return projectService.findProject(currentUserResolver.findCurrentUser(), projectId);
     }
 
     /**

@@ -2,9 +2,8 @@ package dev.yetpk.retrace.web;
 
 import dev.yetpk.retrace.domain.Artifact;
 import dev.yetpk.retrace.domain.Project;
-import dev.yetpk.retrace.security.CurrentUserResolver;
+import dev.yetpk.retrace.security.CurrentProjectResolver;
 import dev.yetpk.retrace.service.ArtifactService;
-import dev.yetpk.retrace.service.ProjectService;
 import dev.yetpk.retrace.service.dto.ArtifactHistory;
 import dev.yetpk.retrace.service.dto.ArtifactSummary;
 import dev.yetpk.retrace.service.dto.VersionContent;
@@ -41,21 +40,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class ArtifactController {
 
     private final ArtifactService artifactService;
-    private final ProjectService projectService;
-    private final CurrentUserResolver currentUserResolver;
+    private final CurrentProjectResolver currentProjectResolver;
 
-    public ArtifactController(ArtifactService artifactService, ProjectService projectService,
-                              CurrentUserResolver currentUserResolver) {
+    public ArtifactController(ArtifactService artifactService, CurrentProjectResolver currentProjectResolver) {
         this.artifactService = artifactService;
-        this.projectService = projectService;
-        this.currentUserResolver = currentUserResolver;
+        this.currentProjectResolver = currentProjectResolver;
     }
 
     @Operation(summary = "The project's artifacts, each with its current version and version count")
-    @ApiResponse(responseCode = "404", description = "No such project for this owner", content = @Content)
+    @ApiResponse(responseCode = "404", description = "No such project for this owner, or not the project of "
+            + "the presented API key", content = @Content)
     @GetMapping
     public List<ArtifactSummary> findArtifacts(@PathVariable UUID projectId) {
-        return artifactService.findArtifacts(findProject(projectId));
+        return artifactService.findArtifacts(currentProjectResolver.findProject(projectId));
     }
 
     @Operation(summary = "One artifact and its full version history",
@@ -64,7 +61,7 @@ public class ArtifactController {
     @ApiResponse(responseCode = "404", description = "No such artifact in this project", content = @Content)
     @GetMapping("/{artifactId}")
     public ArtifactHistory findArtifactHistory(@PathVariable UUID projectId, @PathVariable UUID artifactId) {
-        return artifactService.findArtifactHistory(findProject(projectId), artifactId);
+        return artifactService.findArtifactHistory(currentProjectResolver.findProject(projectId), artifactId);
     }
 
     @Operation(summary = "Rename an artifact",
@@ -75,7 +72,7 @@ public class ArtifactController {
     @PatchMapping("/{artifactId}")
     public ArtifactHistory renameArtifact(@PathVariable UUID projectId, @PathVariable UUID artifactId,
                                           @Valid @RequestBody RenameArtifactRequest request) {
-        Project project = findProject(projectId);
+        Project project = currentProjectResolver.findProject(projectId);
         Artifact renamed = artifactService.renameArtifact(project, artifactId, request.name());
         return artifactService.findArtifactHistory(project, renamed.getId());
     }
@@ -93,7 +90,7 @@ public class ArtifactController {
             @Parameter(description = "The version's dense position in its artifact's history (1…N), "
                     + "not a database id")
             @PathVariable int ordinal) {
-        VersionContent content = artifactService.openVersionContent(findProject(projectId), artifactId, ordinal);
+        VersionContent content = artifactService.openVersionContent(currentProjectResolver.findProject(projectId), artifactId, ordinal);
         // InputStreamResource lets Spring write and close the stream, including on a client
         // disconnect — VersionContent's contract is that the caller closes it.
         return ResponseEntity.ok()
@@ -116,12 +113,8 @@ public class ArtifactController {
             @Parameter(description = "The version's dense position in its artifact's history (1…N), "
                     + "not a database id")
             @PathVariable int ordinal) {
-        artifactService.deleteVersion(findProject(projectId), artifactId, ordinal);
+        artifactService.deleteVersion(currentProjectResolver.findProject(projectId), artifactId, ordinal);
         return ResponseEntity.noContent().build();
-    }
-
-    private Project findProject(UUID projectId) {
-        return projectService.findProject(currentUserResolver.findCurrentUser(), projectId);
     }
 
     /**

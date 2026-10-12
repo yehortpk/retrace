@@ -1,6 +1,7 @@
 package dev.yetpk.retrace.security;
 
-import dev.yetpk.retrace.domain.AppUser;
+import dev.yetpk.retrace.domain.ApiKey;
+import dev.yetpk.retrace.domain.Project;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -55,8 +56,8 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        Optional<AppUser> owner = apiKeyService.authenticate(presented);
-        if (owner.isEmpty()) {
+        Optional<ApiKey> key = apiKeyService.authenticate(presented);
+        if (key.isEmpty()) {
             // The key itself is never logged, here or anywhere: the path and the outcome are the
             // whole of what a reader of the log needs.
             log.info("Rejected a request to {} carrying an invalid API key", request.getRequestURI());
@@ -65,7 +66,8 @@ public class ApiKeyAuthenticationFilter extends OncePerRequestFilter {
         }
 
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(new ApiKeyAuthenticationToken(owner.get()));
+        Project project = key.get().getProject();
+        context.setAuthentication(new ApiKeyAuthenticationToken(project.getOwner(), project.getId()));
         SecurityContextHolder.setContext(context);
         try {
             chain.doFilter(request, response);

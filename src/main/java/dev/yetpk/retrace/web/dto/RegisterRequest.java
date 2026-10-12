@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-/** What a new account needs. The issued API key comes back on the response, once. */
+/** What a new account needs. */
 public record RegisterRequest(
         @NotBlank @Size(max = 64) String username,
         @NotBlank @Email @Size(max = 255) String email,

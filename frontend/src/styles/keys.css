@@ -39,6 +39,11 @@
   color: var(--color-text-secondary);
 }
 
+.key-issued__warning strong {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
 .key-issued__dismiss {
   align-self: flex-start;
 }

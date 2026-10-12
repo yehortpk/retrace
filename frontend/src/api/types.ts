@@ -5,6 +5,8 @@ export interface CurrentUser {
   id: string;
   username: string;
   email: string;
+  /** The project the presenting API key belongs to; always null for the UI's session. */
+  projectId: string | null;
 }
 
 export interface RegisterRequest {
@@ -13,13 +15,11 @@ export interface RegisterRequest {
   password: string;
 }
 
-/** The only response that ever carries the account's first key in plaintext. */
+/** A key belongs to a project, so registering issues none; creating a project does. */
 export interface RegisterResponse {
   userId: string;
   username: string;
   email: string;
-  apiKeyId: string;
-  apiKey: string;
 }
 
 export interface ProjectSummary {
@@ -32,6 +32,12 @@ export interface ProjectSummary {
 export interface CreateProjectRequest {
   name: string;
   description: string | null;
+}
+
+/** The only response that ever carries the new project's first key in plaintext. */
+export interface CreatedProjectResponse {
+  project: ProjectSummary;
+  key: IssuedKeyResponse;
 }
 
 export interface ArtifactVersionView {

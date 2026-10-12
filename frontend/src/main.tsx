@@ -47,7 +47,7 @@ const router = createBrowserRouter([
         element: <ArtifactsPage />,
         children: [{ path: ':artifactId', element: <ArtifactDetailPanel /> }],
       },
-      { path: 'settings/keys', element: <KeysPage /> },
+      { path: 'projects/:projectId/keys', element: <KeysPage /> },
       { path: '*', element: <Navigate to="/" replace /> },
     ],
   },

@@ -85,6 +85,12 @@ function Sidebar() {
                         <span className="nav-link__label">Artifacts</span>
                       </NavLink>
                     </li>
+                    <li>
+                      <NavLink className="nav-link nav-link--nested" to={`/projects/${project.id}/keys`}>
+                        <KeyIcon />
+                        <span className="nav-link__label">Keys</span>
+                      </NavLink>
+                    </li>
                   </ul>
                 )}
               </li>
@@ -99,10 +105,6 @@ function Sidebar() {
         </ul>
       </div>
       <div className="sidebar__footer">
-        <NavLink className="nav-link" to="/settings/keys">
-          <KeyIcon />
-          <span>API keys</span>
-        </NavLink>
         <button className="nav-link" type="button" onClick={signOut}>
           <SignOutIcon />
           <span>Sign out</span>

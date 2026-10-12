@@ -1,6 +1,7 @@
 package dev.yetpk.retrace.web;
 
 import dev.yetpk.retrace.domain.AppUser;
+import dev.yetpk.retrace.security.CurrentProjectResolver;
 import dev.yetpk.retrace.security.CurrentUserResolver;
 import dev.yetpk.retrace.security.RegistrationService;
 import dev.yetpk.retrace.web.dto.CurrentUserView;
@@ -29,37 +30,38 @@ public class AuthController {
 
     private final RegistrationService registrationService;
     private final CurrentUserResolver currentUserResolver;
+    private final CurrentProjectResolver currentProjectResolver;
 
-    public AuthController(RegistrationService registrationService, CurrentUserResolver currentUserResolver) {
+    public AuthController(RegistrationService registrationService, CurrentUserResolver currentUserResolver,
+                          CurrentProjectResolver currentProjectResolver) {
         this.registrationService = registrationService;
         this.currentUserResolver = currentUserResolver;
+        this.currentProjectResolver = currentProjectResolver;
     }
 
-    @Operation(summary = "Register an account and receive its first API key",
-            description = "The response carries the plaintext API key. This is the only time it exists: "
-                    + "only a bcrypt hash is stored, so a key not saved from this response cannot be "
-                    + "recovered and a new one has to be issued.")
-    @ApiResponse(responseCode = "201", description = "Registered; the body carries the API key once")
+    @Operation(summary = "Register an account",
+            description = "No API key is issued here: a key belongs to a project, and creating a project "
+                    + "issues its first one.")
+    @ApiResponse(responseCode = "201", description = "Registered")
     @ApiResponse(responseCode = "400", description = "Invalid request", content = @Content)
     @ApiResponse(responseCode = "409", description = "Username or email already registered", content = @Content)
     @SecurityRequirements
     @PostMapping("/register")
     public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest request) {
-        RegistrationService.Registration registration =
-                registrationService.register(request.username(), request.email(), request.password());
-        AppUser user = registration.user();
-        return ResponseEntity.status(HttpStatus.CREATED).body(new RegisterResponse(
-                user.getId(),
-                user.getUsername(),
-                user.getEmail(),
-                registration.issuedKey().key().getId(),
-                registration.issuedKey().value()));
+        AppUser user = registrationService.register(request.username(), request.email(), request.password())
+                .user();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new RegisterResponse(user.getId(), user.getUsername(), user.getEmail()));
     }
 
-    @Operation(summary = "The account the current credential belongs to")
+    @Operation(summary = "The account the current credential belongs to",
+            description = "Under an API key, `projectId` names the one project the key belongs to — how an "
+                    + "agent configured with nothing but a key learns where its entries go. Under a "
+                    + "session it is null.")
     @GetMapping("/me")
     public CurrentUserView findCurrentUser() {
         AppUser user = currentUserResolver.findCurrentUser();
-        return new CurrentUserView(user.getId(), user.getUsername(), user.getEmail());
+        return new CurrentUserView(user.getId(), user.getUsername(), user.getEmail(),
+                currentProjectResolver.findConfinedProjectId().orElse(null));
     }
 }

@@ -17,9 +17,10 @@ public class ApiKey {
     @Id
     private String id;
 
+    /** The one project this key can read and write. Its owner is the key's owner. */
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "owner_id", nullable = false)
-    private AppUser owner;
+    @JoinColumn(name = "project_id", nullable = false)
+    private Project project;
 
     @Column(nullable = false)
     private String name;
@@ -40,9 +41,9 @@ public class ApiKey {
     protected ApiKey() {
     }
 
-    public ApiKey(String id, AppUser owner, String name, String secretHash) {
+    public ApiKey(String id, Project project, String name, String secretHash) {
         this.id = id;
-        this.owner = owner;
+        this.project = project;
         this.name = name;
         this.secretHash = secretHash;
     }
@@ -51,8 +52,8 @@ public class ApiKey {
         return id;
     }
 
-    public AppUser getOwner() {
-        return owner;
+    public Project getProject() {
+        return project;
     }
 
     public String getName() {

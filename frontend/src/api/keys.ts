@@ -2,20 +2,27 @@ import { useQuery } from '@tanstack/react-query';
 import { request } from './client.ts';
 import type { ApiKeyView, IssuedKeyResponse } from './types.ts';
 
-export const keysKey = ['keys'] as const;
-
-export function findKeys() {
-  return request<ApiKeyView[]>('/api/keys');
+/** A key belongs to one project, so every call names it. */
+export function keysKey(projectId: string) {
+  return ['keys', projectId] as const;
 }
 
-export function issueKey(name: string) {
-  return request<IssuedKeyResponse>('/api/keys', { method: 'POST', json: { name } });
+function keysPath(projectId: string) {
+  return `/api/projects/${encodeURIComponent(projectId)}/keys`;
 }
 
-export function revokeKey(keyId: string) {
-  return request<void>(`/api/keys/${encodeURIComponent(keyId)}`, { method: 'DELETE' });
+export function findKeys(projectId: string) {
+  return request<ApiKeyView[]>(keysPath(projectId));
 }
 
-export function useKeys() {
-  return useQuery({ queryKey: keysKey, queryFn: findKeys });
+export function issueKey(projectId: string, name: string) {
+  return request<IssuedKeyResponse>(keysPath(projectId), { method: 'POST', json: { name } });
+}
+
+export function revokeKey(projectId: string, keyId: string) {
+  return request<void>(`${keysPath(projectId)}/${encodeURIComponent(keyId)}`, { method: 'DELETE' });
+}
+
+export function useKeys(projectId: string) {
+  return useQuery({ queryKey: keysKey(projectId), queryFn: () => findKeys(projectId) });
 }

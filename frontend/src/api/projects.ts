@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { request } from './client.ts';
-import type { CreateProjectRequest, ProjectSummary } from './types.ts';
+import type { CreatedProjectResponse, CreateProjectRequest, ProjectSummary } from './types.ts';
 
 export const projectsKey = ['projects'] as const;
 
@@ -9,7 +9,7 @@ export function findProjects() {
 }
 
 export function createProject(project: CreateProjectRequest) {
-  return request<ProjectSummary>('/api/projects', { method: 'POST', json: project });
+  return request<CreatedProjectResponse>('/api/projects', { method: 'POST', json: project });
 }
 
 export function useProjects() {

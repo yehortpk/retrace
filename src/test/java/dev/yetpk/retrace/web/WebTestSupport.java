@@ -14,7 +14,12 @@ import dev.yetpk.retrace.security.IssuedApiKey;
 import dev.yetpk.retrace.security.RegistrationService;
 import dev.yetpk.retrace.security.SessionAuthority;
 import dev.yetpk.retrace.service.ProjectService;
+import dev.yetpk.retrace.service.dto.CreatedProject;
+import jakarta.servlet.http.Cookie;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
@@ -79,7 +84,9 @@ abstract class WebTestSupport {
     protected ArtifactVersionRepository artifactVersionRepository;
 
     protected AppUser owner;
-    protected String ownerKey;
+
+    /** The plaintext of each project's default key, kept from creation — the only time it exists. */
+    private final Map<UUID, String> projectKeys = new HashMap<>();
 
     @BeforeEach
     void resetDatabase() {
@@ -90,22 +97,32 @@ abstract class WebTestSupport {
         apiKeyRepository.deleteAllInBatch();
         appUserRepository.deleteAllInBatch();
 
-        RegistrationService.Registration registration = registrationService.register("owner", "owner@example.test",
-                "supersecret1");
-        owner = registration.user();
-        ownerKey = registration.issuedKey().value();
+        projectKeys.clear();
+        owner = registerUser("owner");
     }
 
-    protected RegistrationService.Registration registerUser(String username) {
-        return registrationService.register(username, username + "@example.test", "supersecret1");
+    protected AppUser registerUser(String username) {
+        return registrationService.register(username, username + "@example.test", "supersecret1").user();
     }
 
-    protected IssuedApiKey issueKey(AppUser user, String name) {
-        return apiKeyService.issueKey(user, name);
+    protected IssuedApiKey issueKey(Project project, String name) {
+        return apiKeyService.issueKey(project, name);
     }
 
+    /** Creates a project the way the API does, keeping its default key for {@link #keyFor}. */
     protected Project createProject(AppUser user, String name) {
-        return projectService.createProject(user, name, null);
+        CreatedProject created = projectService.createProject(user, name, null);
+        projectKeys.put(created.project().id(), created.key().value());
+        return projectService.findProject(user, created.project().id());
+    }
+
+    /** The default key issued with {@code project}, which reaches that project and no other. */
+    protected String keyFor(Project project) {
+        String key = projectKeys.get(project.getId());
+        if (key == null) {
+            throw new IllegalStateException("No key was kept for project " + project.getId());
+        }
+        return key;
     }
 
     /** Authenticates as {@code user} through the session, the way the UI does. */
@@ -113,6 +130,24 @@ abstract class WebTestSupport {
         return SecurityMockMvcRequestPostProcessors.user(user.getUsername())
                 .authorities(new SimpleGrantedAuthority("ROLE_USER"),
                         new SimpleGrantedAuthority(SessionAuthority.SESSION));
+    }
+
+    /**
+     * A CSRF token presented the way the SPA presents one: the {@code XSRF-TOKEN} cookie echoed in
+     * the {@code X-XSRF-TOKEN} header, checked by the application's own cookie repository.
+     *
+     * <p>Spring Security's {@code csrf()} post-processor is deliberately not used. It replaces the
+     * shared {@code CsrfFilter}'s repository with a session-backed one for the rest of the cached
+     * context, after which every request — key requests included — creates a session, and a test that
+     * a key request leaves no session behind passes or fails depending on test order.
+     */
+    protected static RequestPostProcessor validCsrfToken() {
+        return request -> {
+            String token = UUID.randomUUID().toString();
+            request.setCookies(new Cookie("XSRF-TOKEN", token));
+            request.addHeader("X-XSRF-TOKEN", token);
+            return request;
+        };
     }
 
     /** The {@code entry} part of a write, with the content type that makes it bind as JSON. */

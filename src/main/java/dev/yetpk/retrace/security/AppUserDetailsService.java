@@ -31,8 +31,8 @@ public class AppUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AppUser user = appUserRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("No user named '%s'".formatted(username)));
-        // SESSION is what marks this as a form login rather than an API key, which is how
-        // /api/keys stays reachable by session only.
+        // SESSION is what marks this as a form login rather than an API key, which is how project
+        // listing, project creation, and key management stay reachable by session only.
         return new User(user.getUsername(), user.getPasswordHash(),
                 List.of(new SimpleGrantedAuthority("ROLE_USER"),
                         new SimpleGrantedAuthority(SessionAuthority.SESSION)));

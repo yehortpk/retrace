@@ -1,7 +1,6 @@
 package dev.yetpk.retrace.web;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -29,7 +28,7 @@ class ArtifactControllerTest extends WebTestSupport {
                         .file(entryPart("{\"description\":\"Made %s.\",\"artifacts\":[{\"name\":\"%s\"}]}"
                                 .formatted(artifactName, artifactName)))
                         .file(filePart(artifactName + ".txt", content))
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isCreated())
                 .andReturn();
         return UUID.fromString(readJson(result).get("versions").get(0).get("artifactId").asString());
@@ -40,7 +39,7 @@ class ArtifactControllerTest extends WebTestSupport {
                         .file(entryPart("{\"description\":\"Revised it.\",\"artifacts\":[{\"artifactId\":\"%s\"}]}"
                                 .formatted(artifactId)))
                         .file(filePart("revised.txt", content))
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isCreated());
     }
 
@@ -55,7 +54,7 @@ class ArtifactControllerTest extends WebTestSupport {
         addVersion(project, artifactId, "v2");
 
         mockMvc.perform(get("/api/projects/{projectId}/artifacts", project.getId())
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].versionCount").value(2))
@@ -69,7 +68,7 @@ class ArtifactControllerTest extends WebTestSupport {
         addVersion(project, artifactId, "v2");
 
         mockMvc.perform(get("/api/projects/{projectId}/artifacts/{artifactId}", project.getId(), artifactId)
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.versions.length()").value(2))
                 .andExpect(jsonPath("$.versions[0].ordinal").value(1))
@@ -86,7 +85,7 @@ class ArtifactControllerTest extends WebTestSupport {
         addVersion(project, artifactId, "v2");
 
         mockMvc.perform(patch("/api/projects/{projectId}/artifacts/{artifactId}", project.getId(), artifactId)
-                        .header(API_KEY_HEADER, ownerKey)
+                        .header(API_KEY_HEADER, keyFor(project))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"pricing-page-final\"}"))
                 .andExpect(status().isOk())
@@ -104,7 +103,7 @@ class ArtifactControllerTest extends WebTestSupport {
         UUID second = recordArtifact(project, "other-page", "v1");
 
         mockMvc.perform(patch("/api/projects/{projectId}/artifacts/{artifactId}", project.getId(), second)
-                        .header(API_KEY_HEADER, ownerKey)
+                        .header(API_KEY_HEADER, keyFor(project))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"pricing-page\"}"))
                 .andExpect(status().isOk());
@@ -118,7 +117,7 @@ class ArtifactControllerTest extends WebTestSupport {
         UUID artifactId = recordArtifact(project, "pricing-page", "v1");
 
         mockMvc.perform(patch("/api/projects/{projectId}/artifacts/{artifactId}", project.getId(), artifactId)
-                        .header(API_KEY_HEADER, ownerKey)
+                        .header(API_KEY_HEADER, keyFor(project))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"   \"}"))
                 .andExpect(status().isBadRequest());
@@ -132,7 +131,7 @@ class ArtifactControllerTest extends WebTestSupport {
         MvcResult result = mockMvc.perform(
                         get("/api/projects/{projectId}/artifacts/{artifactId}/versions/{ordinal}/download",
                                 project.getId(), artifactId, 1)
-                                .header(API_KEY_HEADER, ownerKey))
+                                .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isOk())
                 .andExpect(header().string("Content-Type", "text/plain"))
                 .andExpect(header().string("Content-Length", "18"))
@@ -155,7 +154,7 @@ class ArtifactControllerTest extends WebTestSupport {
             MvcResult result = mockMvc.perform(
                             get("/api/projects/{projectId}/artifacts/{artifactId}/versions/{ordinal}/download",
                                     project.getId(), artifactId, ordinal)
-                                    .header(API_KEY_HEADER, ownerKey))
+                                    .header(API_KEY_HEADER, keyFor(project)))
                     .andExpect(status().isOk())
                     .andReturn();
             assertThat(result.getResponse().getContentAsString(StandardCharsets.UTF_8))
@@ -170,7 +169,7 @@ class ArtifactControllerTest extends WebTestSupport {
 
         mockMvc.perform(get("/api/projects/{projectId}/artifacts/{artifactId}/versions/{ordinal}/download",
                         project.getId(), artifactId, 99)
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isNotFound());
     }
 
@@ -184,7 +183,7 @@ class ArtifactControllerTest extends WebTestSupport {
 
         mockMvc.perform(delete("/api/projects/{projectId}/artifacts/{artifactId}/versions/{ordinal}",
                         project.getId(), artifactId, 2)
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isNoContent());
 
         assertThat(artifactRepository.findById(artifactId)).isPresent();
@@ -201,12 +200,12 @@ class ArtifactControllerTest extends WebTestSupport {
 
         mockMvc.perform(delete("/api/projects/{projectId}/artifacts/{artifactId}/versions/{ordinal}",
                         project.getId(), artifactId, 1)
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isNoContent());
 
         assertThat(artifactRepository.findById(artifactId)).isEmpty();
         mockMvc.perform(get("/api/projects/{projectId}/artifacts/{artifactId}", project.getId(), artifactId)
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(project)))
                 .andExpect(status().isNotFound());
     }
 
@@ -218,7 +217,7 @@ class ArtifactControllerTest extends WebTestSupport {
         mockMvc.perform(delete("/api/projects/{projectId}/artifacts/{artifactId}/versions/{ordinal}",
                         project.getId(), artifactId, 1)
                         .with(asSession(owner))
-                        .with(csrf()))
+                        .with(validCsrfToken()))
                 .andExpect(status().isNoContent());
     }
 
@@ -229,7 +228,7 @@ class ArtifactControllerTest extends WebTestSupport {
         UUID artifactId = recordArtifact(first, "pricing-page", "v1");
 
         mockMvc.perform(get("/api/projects/{projectId}/artifacts/{artifactId}", second.getId(), artifactId)
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(second)))
                 .andExpect(status().isNotFound());
     }
 
@@ -240,7 +239,7 @@ class ArtifactControllerTest extends WebTestSupport {
         UUID artifactId = recordArtifact(first, "pricing-page", "v1");
 
         mockMvc.perform(patch("/api/projects/{projectId}/artifacts/{artifactId}", second.getId(), artifactId)
-                        .header(API_KEY_HEADER, ownerKey)
+                        .header(API_KEY_HEADER, keyFor(second))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"name\":\"hijacked\"}"))
                 .andExpect(status().isNotFound());
@@ -256,7 +255,7 @@ class ArtifactControllerTest extends WebTestSupport {
 
         mockMvc.perform(get("/api/projects/{projectId}/artifacts/{artifactId}/versions/{ordinal}/download",
                         second.getId(), artifactId, 1)
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(second)))
                 .andExpect(status().isNotFound());
     }
 
@@ -268,7 +267,7 @@ class ArtifactControllerTest extends WebTestSupport {
 
         mockMvc.perform(delete("/api/projects/{projectId}/artifacts/{artifactId}/versions/{ordinal}",
                         second.getId(), artifactId, 1)
-                        .header(API_KEY_HEADER, ownerKey))
+                        .header(API_KEY_HEADER, keyFor(second)))
                 .andExpect(status().isNotFound());
 
         assertThat(artifactVersionRepository.countByArtifactId(artifactId)).isEqualTo(1);
@@ -276,11 +275,11 @@ class ArtifactControllerTest extends WebTestSupport {
 
     @Test
     void FindArtifacts_ProjectOwnedByAnotherUser_ShouldReturnNotFound() throws Exception {
-        AppUser other = registerUser("other").user();
+        AppUser other = registerUser("other");
         Project theirs = createProject(other, "Theirs");
 
         mockMvc.perform(get("/api/projects/{projectId}/artifacts", theirs.getId())
-                        .header(API_KEY_HEADER, ownerKey))
+                        .with(asSession(owner)))
                 .andExpect(status().isNotFound());
     }
 }

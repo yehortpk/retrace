@@ -29,8 +29,8 @@ class ArtifactServiceTest extends ServiceTestSupport {
     private Project project;
 
     @BeforeEach
-    void createProject() {
-        project = projectService.createProject(owner, "Website", null);
+    void setUpProject() {
+        project = createProject(owner, "Website");
     }
 
     private void recordEntryWith(String description, AttachmentSpec attachment) {
@@ -60,7 +60,7 @@ class ArtifactServiceTest extends ServiceTestSupport {
     }
 
     private UUID createArtifactInAnotherProject() {
-        Project other = projectService.createProject(owner, "Other", null);
+        Project other = createProject(owner, "Other");
         timelineService.recordEntry(other,
                 new RecordEntryCommand(null, "Theirs", null, null, List.of(attachmentNamed("logo", null, 5))));
         return artifactRepository.findByProjectId(other.getId()).getFirst().getId();

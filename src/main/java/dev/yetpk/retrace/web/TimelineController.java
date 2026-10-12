@@ -1,8 +1,7 @@
 package dev.yetpk.retrace.web;
 
 import dev.yetpk.retrace.domain.Project;
-import dev.yetpk.retrace.security.CurrentUserResolver;
-import dev.yetpk.retrace.service.ProjectService;
+import dev.yetpk.retrace.security.CurrentProjectResolver;
 import dev.yetpk.retrace.service.TimelineService;
 import dev.yetpk.retrace.service.dto.TimelineEntryView;
 import io.swagger.v3.oas.annotations.Operation;
@@ -32,14 +31,12 @@ public class TimelineController {
     private static final int DEFAULT_PAGE_SIZE = 20;
 
     private final TimelineService timelineService;
-    private final ProjectService projectService;
-    private final CurrentUserResolver currentUserResolver;
+    private final CurrentProjectResolver currentProjectResolver;
 
-    public TimelineController(TimelineService timelineService, ProjectService projectService,
-                              CurrentUserResolver currentUserResolver) {
+    public TimelineController(TimelineService timelineService,
+                              CurrentProjectResolver currentProjectResolver) {
         this.timelineService = timelineService;
-        this.projectService = projectService;
-        this.currentUserResolver = currentUserResolver;
+        this.currentProjectResolver = currentProjectResolver;
     }
 
     @Operation(summary = "The project's entries, newest first",
@@ -50,7 +47,8 @@ public class TimelineController {
 
                     Passing `since` returns every entry after that instant instead of a page — what a \
                     starting agent session reads to learn what is already recorded.""")
-    @ApiResponse(responseCode = "404", description = "No such project for this owner", content = @Content)
+    @ApiResponse(responseCode = "404", description = "No such project for this owner, or not the project of "
+            + "the presented API key", content = @Content)
     @GetMapping("/timeline")
     public List<TimelineEntryView> findTimeline(
             @PathVariable UUID projectId,
@@ -60,7 +58,7 @@ public class TimelineController {
             @RequestParam(defaultValue = "20") int size,
             @Parameter(description = "Return everything recorded after this instant instead of a page")
             @RequestParam(required = false) OffsetDateTime since) {
-        Project project = projectService.findProject(currentUserResolver.findCurrentUser(), projectId);
+        Project project = currentProjectResolver.findProject(projectId);
         if (since != null) {
             return timelineService.findTimelineSince(project, since);
         }
