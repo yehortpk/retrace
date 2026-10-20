@@ -1,0 +1,16 @@
+{
+  "name": "retrace",
+  "version": "0.2.0",
+  "description": "Records a chronological history of a project as the agent works, into a Retrace timeline.",
+  "author": {
+    "name": "Yehor Samoilenko"
+  },
+  "skills": [
+    "./skills/retrace"
+  ],
+  "commands": [
+    "./commands/init-retrace.md",
+    "./commands/retrace.md"
+  ],
+  "hooks": "./hooks/hooks.json"
+}

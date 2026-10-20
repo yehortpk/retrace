@@ -12,3 +12,4 @@ bin/
 dist/
 frontend/dist/
 .claude/
+.retracekey

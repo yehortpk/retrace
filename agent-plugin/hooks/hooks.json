@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "timeout": 30,
+            "prompt": "You are deciding whether the turn that just ended produced a moment worth recording in this project's Retrace history.\n\nFirst, the gate. If `.retracekey` does not exist in the project root, return {\"ok\": true} immediately and do nothing else. Most projects are not Retrace projects, and in those you must stay silent. Also return {\"ok\": true} if `stop_hook_active` is true in the hook input, because the history step has already run for this turn.\n\nIf the key file does exist, judge the turn. Record only a moment someone would want to read about weeks later: a feature or fix that now works, a decision taken and why, something produced or delivered, a dead end that is worth not walking into twice. Do not record routine mechanics — reading files, searching, a question answered, a typo, a test run that passed, work that is still mid-flight. Silence is the common and correct outcome; a timeline full of trivia is worse than one with gaps.\n\nIf nothing qualifies, return {\"ok\": true}.\n\nIf something does, return {\"ok\": false, \"reason\": \"Record a Retrace entry for this turn: follow the retrace skill, which has the endpoint, the key, and the request shape. Describe what occurred in the past tense and what it means for the project, not which tools were used. Attach no files. If the POST fails, say so once and stop — do not retry.\"}\n\nReturn only the JSON object.",
+            "continueOnBlock": true
+          }
+        ]
+      }
+    ]
+  }
+}
