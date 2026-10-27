@@ -6,11 +6,8 @@
     "name": "Yehor Samoilenko"
   },
   "skills": [
-    "./skills/retrace"
-  ],
-  "commands": [
-    "./commands/init-retrace.md",
-    "./commands/retrace.md"
+    "./skills/retrace",
+    "./skills/init-retrace"
   ],
   "hooks": "./hooks/hooks.json"
 }

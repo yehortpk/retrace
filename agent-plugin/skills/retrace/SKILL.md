@@ -1,6 +1,7 @@
 ---
 name: retrace
 description: Record a moment in this project's Retrace history — a chronological log of what happened, written as the work happens. Use when a turn produced something worth remembering weeks later (a feature that now works, a decision and its reasoning, something delivered, a dead end worth not repeating), or when the user asks to record, log, or note something in the project history. Also use when asked what has happened in a project lately, to read the timeline back.
+argument-hint: "[what happened]"
 ---
 
 # Retrace
@@ -78,6 +79,16 @@ curl -fsS -X POST "$RETRACE_URL/api/projects/$PROJECT_ID/entries" \
 ```
 
 A `name` creates a new artifact; an `artifactId` adds a version to an existing one. Check `GET /api/projects/$PROJECT_ID/artifacts` before creating, so a second version does not become a second artifact.
+
+## Recording by hand
+
+When the user runs `/retrace`, `$ARGUMENTS` is what they want recorded, and they asked for it, so do not second-guess whether the moment is worth an entry.
+
+- **With arguments**, record that. Write it as project history under the rules above, and put the reasoning in `note`.
+- **Without arguments**, record what this session has done so far, under the editorial rules in *When to record*. If nothing in the session meets them, say so instead of inventing an entry.
+- If the user asks for a file to be attached, follow *Artifacts* below: one file and one artifact at a time, checking the existing artifacts first.
+
+Confirm what was recorded in one line.
 
 ## Reading history back
 

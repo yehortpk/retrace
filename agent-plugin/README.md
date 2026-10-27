@@ -56,7 +56,6 @@ That is a real amount of per-agent surface to keep working, and none of it is te
 
 | File | Purpose |
 |---|---|
-| [skills/retrace/SKILL.md](skills/retrace/SKILL.md) | endpoint, key handling, request shapes, and what deserves an entry |
+| [skills/retrace/SKILL.md](skills/retrace/SKILL.md) | endpoint, key handling, request shapes, what deserves an entry, and `/retrace` for recording by hand |
 | [hooks/hooks.json](hooks/hooks.json) | the `Stop` hook that offers an entry after each turn |
-| [commands/init-retrace.md](commands/init-retrace.md) | bind a project to its key |
-| [commands/retrace.md](commands/retrace.md) | record an entry by hand |
+| [skills/init-retrace/SKILL.md](skills/init-retrace/SKILL.md) | `/init-retrace`: bind a project to its key (manual only) |

@@ -1,6 +1,8 @@
 ---
+name: init-retrace
 description: Bind this project to its Retrace history by storing its API key
-argument-hint: <api-key> | <path-to-file-holding-the-key>
+argument-hint: "<api-key> | <path-to-file-holding-the-key>"
+disable-model-invocation: true
 ---
 
 Bind this repository to a Retrace project. `$ARGUMENTS` is either the project's API key, or a path to a file that holds it.
